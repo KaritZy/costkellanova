@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Cotizaciones KELLANOVA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        .menu-bar {
+            background-color: #34495e;
+            padding: 10px;
+            width: 20%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .menu-bar a {
+            color: #fff;
+            margin: 15px 0;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+            transition: background 0.3s;
+        }
+
+        .menu-bar a:hover {
+            background-color: #2c3e50;
+            border-radius: 5px;
+        }
+
+        .content {
+            margin-left: 22%;
+            width: 75%;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+        }
+
+        h1, h2 {
+            color: #34495e;
+            margin: 10px 0;
+        }
+
+        form {
+            margin: 20px 0;
+            padding: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="password"],
+        select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin: 5px 0;
+            width: 80%;
+            display: block;
+            margin: 10px auto;
+        }
+
+        button {
+            background-color: #34495e;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #2c3e50;
+        }
+
+        .table-container {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        th {
+            background-color: #34495e;
+            color: #fff;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .recordatorio {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .respondido {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        /* Media Queries para Ajustes Responsivos */
+        @media (max-width: 768px) {
+            .menu-bar {
+                width: 30%;
+            }
+
+            .content {
+                margin-left: 32%;
+                width: 65%;
+            }
+
+            input[type="text"],
+            input[type="date"],
+            input[type="password"],
+            select {
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .menu-bar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: space-around;
+                position: relative;
+            }
+
+            .content {
+                margin-left: 0;
+                width: 100%;
+                margin-top: 20px;
+            }
+
+            input[type="text"],
+            input[type="date"],
+            input[type="password"],
+            select {
+                width: 100%;
+            }
+
+            .menu-bar a {
+                padding: 5px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {% if not session.get('logged_in') %}
+    <!-- Pantalla de Login -->
+    <div class="content">
+        <h2>Iniciar Sesión</h2>
+        <form action="/login" method="POST">
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required><br>
+            <button type="submit">Ingresar</button>
+        </form>
+    </div>
+    {% else %}
+    <!-- Menú de Navegación Lateral -->
+    <div class="menu-bar">
+        <a href="#registro">Registrar Cotización</a>
+        <a href="#buscar">Buscar Cotización</a>
+        <a href="#listado">Listado de Cotizaciones</a>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="content">
+        <!-- Sección de Registro de Cotizaciones -->
+        <section id="registro">
+            <h1>Control de Cotizaciones KELLANOVA</h1>
+            <h2>Registrar Cotización</h2>
+            <form action="/agregar" method="POST">
+                <label for="folio">Folio:</label>
+                <input type="text" id="folio" name="folio" required><br>
+                
+                <label for="fecha">Fecha:</label>
+                <input type="date" id="fecha" name="fecha" required><br>
+                
+                <label for="componente">Componente a Cotizar:</label>
+                <input type="text" id="componente" name="componente" required><br>
+
+                <label for="cotizacion">Cotización:</label>
+                <input type="text" id="cotizacion" name="cotizacion" required><br>
+
+                <label for="usuario">Nombre de Usuario:</label>
+                <input type="text" id="usuario" name="usuario" placeholder="Escribe tu nombre" required><br>
+                
+                <button type="submit">Registrar Cotización</button>
+            </form>
+        </section>
+
+        <!-- Sección de Búsqueda de Cotizaciones -->
+        <section id="buscar">
+            <h2>Buscar Cotización</h2>
+            <form action="/buscar" method="POST">
+                <label for="criterio">Buscar por:</label>
+                <select name="criterio" id="criterio">
+                    <option value="folio">Folio</option>
+                    <option value="fecha">Fecha</option>
+                </select>
+                <input type="text" name="valor" placeholder="Ingrese el valor de búsqueda" required>
+                <button type="submit">Buscar</button>
+            </form>
+        </section>
+
+        <!-- Sección de Listado de Cotizaciones -->
+        <section id="listado">
+            <h2>Listado de Cotizaciones</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Folio</th>
+                            <th>Fecha</th>
+                            <th>Componente</th>
+                            <th>Cotización</th>
+                            <th>Recordatorio</th>
+                            <th>Respondido</th>
+                            <th>Usuario</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cotizacion in cotizaciones %}
+                        <tr>
+                            <td>{{ cotizacion.folio }}</td>
+                            <td>{{ cotizacion.fecha }}</td>
+                            <td>{{ cotizacion.componente }}</td>
+                            <td>{{ cotizacion.cotizacion }}</td>
+                            <td class="recordatorio">{{ cotizacion.recordatorio }}</td>
+                            <td class="{{ 'respondido' if cotizacion.respondido else 'no-respondido' }}">{{ 'Sí' if cotizacion.respondido else 'No' }}</td>
+                            <td>{{ cotizacion.usuario }}</td>
+                            <td>
+                                {% if not cotizacion.respondido %}
+                                <form action="/responder/{{ cotizacion.folio }}" method="POST" style="display:inline;">
+                                    <button type="submit">Marcar como Respondida</button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </body>
+    
+    </html>
