@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Componentes de Equipos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .form-container {
+      max-width: 500px;
+      margin: 0 auto;
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+    .form-container input, .form-container button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .equipos-list {
+      margin-top: 20px;
+    }
+    .equipos-list li {
+      cursor: pointer;
+      margin: 5px 0;
+      padding: 10px;
+      background-color: #e0e0e0;
+      border-radius: 5px;
+    }
+    .equipos-list li:hover {
+      background-color: #d0d0d0;
+    }
+    .componentes-list {
+      margin-top: 10px;
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Gestión de Equipos de Carga</h2>
+    <input type="text" id="equipoInput" placeholder="Nombre del equipo">
+    <button onclick="agregarEquipo()">Agregar Equipo</button>
+    <button onclick="eliminarEquipo()">Eliminar Equipo Seleccionado</button>
+    
+    <h3>Lista de Equipos:</h3>
+    <ul id="equiposList" class="equipos-list"></ul>
+
+    <div id="componentesSection" style="display:none;">
+      <h3>Componentes del Equipo Seleccionado:</h3>
+      <input type="text" id="componenteInput" placeholder="Nombre del componente">
+      <button onclick="agregarComponente()">Agregar Componente</button>
+      <ul id="componentesList" class="componentes-list"></ul>
+    </div>
+  </div>
+
+  <script>
+    // Almacenar equipos y componentes en el localStorage
+    let equipos = JSON.parse(localStorage.getItem('equipos')) || {};
+    let equipoSeleccionado = null;
+
+    function guardarDatos() {
+      localStorage.setItem('equipos', JSON.stringify(equipos));
+    }
+
+    function actualizarListaEquipos() {
+      const listaEquipos = document.getElementById('equiposList');
+      listaEquipos.innerHTML = '';
+      for (const equipo in equipos) {
+        const li = document.createElement('li');
+        li.textContent = equipo;
+        li.onclick = () => seleccionarEquipo(equipo);
+        listaEquipos.appendChild(li);
+      }
+    }
+
+    function agregarEquipo() {
+      const equipoInput = document.getElementById('equipoInput').value.trim();
+      if (equipoInput && !equipos[equipoInput]) {
+        equipos[equipoInput] = [];
+        guardarDatos();
+        actualizarListaEquipos();
+        document.getElementById('equipoInput').value = '';
+      } else if (equipos[equipoInput]) {
+        alert('El equipo ya existe.');
+      }
+    }
+
+    function eliminarEquipo() {
+      if (equipoSeleccionado) {
+        delete equipos[equipoSeleccionado];
+        guardarDatos();
+        equipoSeleccionado = null;
+        document.getElementById('componentesSection').style.display = 'none';
+        actualizarListaEquipos();
+      } else {
+        alert('Selecciona un equipo para eliminar.');
+      }
+    }
+
+    function seleccionarEquipo(equipo) {
+      equipoSeleccionado = equipo;
+      document.getElementById('componentesSection').style.display = 'block';
+      document.getElementById('componentesList').innerHTML = '';
+      const componentes = equipos[equipoSeleccionado];
+      componentes.forEach(componente => {
+        const li = document.createElement('li');
+        li.textContent = componente;
+        document.getElementById('componentesList').appendChild(li);
+      });
+    }
+
+    function agregarComponente() {
+      const componenteInput = document.getElementById('componenteInput').value.trim();
+      if (componenteInput && equipoSeleccionado) {
+        equipos[equipoSeleccionado].push(componenteInput);
+        guardarDatos();
+        seleccionarEquipo(equipoSeleccionado);
+        document.getElementById('componenteInput').value = '';
+      } else if (!equipoSeleccionado) {
+        alert('Selecciona un equipo primero.');
+      }
+    }
+
+    // Inicializar la lista de equipos al cargar la página
+    window.onload = actualizarListaEquipos;
+  </script> <script src="scripts.js"></script>
+
+</body>
+</html>

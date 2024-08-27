@@ -203,13 +203,15 @@
         <a href="#registro">Registrar Cotización</a>
         <a href="#buscar">Buscar Cotización</a>
         <a href="#listado">Listado de Cotizaciones</a>
+        <a href="componentes.html">Componentes</a>
+        <a href="admin_login.html">Administrador</a>
     </div>
 
     <!-- Contenido Principal -->
     <div class="content">
         <!-- Sección de Registro de Cotizaciones -->
         <section id="registro">
-            <h1>Control de Cotizaciones KELLANOVA</h1>
+            <h1>Proyecto Marck</h1>
             <h2>Registrar Cotización</h2>
             <form action="/agregar" method="POST">
                 <label for="folio">Folio:</label>
@@ -270,7 +272,7 @@
                             <td>{{ cotizacion.componente }}</td>
                             <td>{{ cotizacion.cotizacion }}</td>
                             <td class="recordatorio">{{ cotizacion.recordatorio }}</td>
-                            <td class="{{ 'respondido' if cotizacion.respondido else 'no-respondido' }}">{{ 'Sí' if cotizacion.respondido else 'No' }}</td>
+                            <td class="{{ 'respondido' if cotizacion.respondido else 'no-respondido' }}">{{ 'Cotizado' if cotizacion.respondido else 'No Cotizado' }}</td>
                             <td>{{ cotizacion.usuario }}</td>
                             <td>
                                 {% if not cotizacion.respondido %}
@@ -286,6 +288,20 @@
             </div>
         </div>
         {% endif %}
+        <script>
+            function abrirVentanaComponentes() {
+              const usuario = prompt("Ingresa el usuario:");
+              const contrasena = prompt("Ingresa la contraseña:");
+          
+              if (usuario === "Ricardo" && contrasena === "Acdcministrador") {
+                // Abre una nueva ventana si las credenciales son correctas
+                window.open("componentes.html", "_blank", "width=500,height=400");
+              } else {
+                alert("Usuario o contraseña incorrectos.");
+              }
+            }
+          </script>
+          
     </body>
     
     </html>
