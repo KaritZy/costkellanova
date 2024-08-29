@@ -1,90 +1,101 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from datetime import datetime, timedelta
+from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'tu_clave_secreta_aqui'
+app.secret_key = 'tu_clave_secreta_aqui'  # Reemplaza con tu clave secreta
 
-# Contraseña para acceder a la aplicación
-PASSWORD = 'semsa'
-
-# Simulación de base de datos
+# Simulación de base de datos para cotizaciones
 cotizaciones = []
 
-# Función para verificar recordatorios
-def verificar_recordatorios():
-    hoy = datetime.now()
-    for cotizacion in cotizaciones:
-        fecha_registro = datetime.strptime(cotizacion['fecha'], '%Y-%m-%d')
-        if hoy - fecha_registro > timedelta(days=7) and not cotizacion.get('respondido'):
-            cotizacion['recordatorio'] = 'Pendiente de respuesta desde hace más de 7 días'
+@app.route('/componentes')
+def componentes():
+    return render_template('componentes.html')
 
 @app.route('/')
 def index():
-    verificar_recordatorios()
-    return render_template('index.html', cotizaciones=cotizaciones)
+    # Verifica si el usuario está logueado
+    if not session.get('logged_in'):
+        return render_template('index.html')
+    else:
+        # Calcular la diferencia de días para cada cotización
+        for cotizacion in cotizaciones:
+            fecha_cotizacion = datetime.strptime(cotizacion['fecha'], '%Y-%m-%d')
+            diferencia_dias = (datetime.now() - fecha_cotizacion).days
+            cotizacion['mostrar_recordatorio'] = diferencia_dias > 3 and not cotizacion['respondido']
+
+        return render_template('index.html', cotizaciones=cotizaciones)
 
 @app.route('/login', methods=['POST'])
 def login():
-    password = request.form['password']
-    if password == PASSWORD:
+    # Validación de contraseña simple
+    if request.form['password'] == 'semsa':  # Reemplaza con una lógica más segura para producción
         session['logged_in'] = True
         flash('Inicio de sesión exitoso.')
-        return redirect(url_for('index'))
     else:
-        flash('Contraseña incorrecta, intente nuevamente.')
-        return redirect(url_for('index'))
+        flash('Contraseña incorrecta.')
+    return redirect(url_for('index'))
 
 @app.route('/logout')
 def logout():
-    session.pop('logged_in', None)
-    flash('Sesión cerrada correctamente.')
+    session['logged_in'] = False
+    flash('Sesión cerrada.')
     return redirect(url_for('index'))
 
 @app.route('/agregar', methods=['POST'])
-def agregar():
-    if not session.get('logged_in'):
-        return redirect(url_for('index'))
+def agregar_cotizacion():
+    fecha = request.form['fecha']
+    componente = request.form['componente']
+    cotizacion = request.form['cotizacion']
+    numero_serie = request.form['numero_serie']  # Capturar el nuevo campo "Número de Serie"
 
-    if request.method == 'POST':
-        folio = request.form['folio']
-        fecha = request.form['fecha']
-        componente = request.form['componente']
-        cotizacion = request.form['cotizacion']
-        
-        nueva_cotizacion = {
-            'folio': folio,
-            'fecha': fecha,
-            'componente': componente,
-            'cotizacion': cotizacion,
-            'recordatorio': '',
-            'respondido': False
-        }
-        cotizaciones.append(nueva_cotizacion)
-        flash('Cotización registrada exitosamente.')
-        return redirect(url_for('index'))
+    # Crear un nuevo registro de cotización
+    nueva_cotizacion = {
+        'folio': len(cotizaciones) + 1,
+        'fecha': fecha,
+        'componente': componente,
+        'cotizacion': cotizacion,
+        'recordatorio': 'Pendiente',
+        'respondido': False,
+        'numero_serie': numero_serie,  # Añadir el número de serie
+        'mostrar_recordatorio': False  # Inicialmente sin recordatorio
+    }
+
+    # Agregar la nueva cotización a la "base de datos"
+    cotizaciones.append(nueva_cotizacion)
+    flash('Cotización registrada exitosamente.')
+    return redirect(url_for('index'))
 
 @app.route('/buscar', methods=['POST'])
-def buscar():
-    if not session.get('logged_in'):
-        return redirect(url_for('index'))
-
+def buscar_cotizacion():
     criterio = request.form['criterio']
     valor = request.form['valor']
-    resultados = [c for c in cotizaciones if c[criterio] == valor]
-    return render_template('index.html', cotizaciones=resultados)
-
-@app.route('/responder/<folio>', methods=['POST'])
-def responder(folio):
-    if not session.get('logged_in'):
-        return redirect(url_for('index'))
+    resultados = []
 
     for cotizacion in cotizaciones:
-        if cotizacion['folio'] == folio:
-            cotizacion['respondido'] = True
-            cotizacion['recordatorio'] = ''
-            flash(f'Cotización con folio {folio} marcada como respondida.')
-            break
+        if criterio == 'folio' and str(cotizacion['folio']) == valor:
+            resultados.append(cotizacion)
+        elif criterio == 'fecha' and cotizacion['fecha'] == valor:
+            resultados.append(cotizacion)
+
+    return render_template('index.html', cotizaciones=resultados)
+
+@app.route('/responder/<int:folio>', methods=['POST'])
+def responder_cotizacion(folio):
+    admin_name = request.form['admin_name']
+    admin_password = request.form['admin_password']
+    
+    # Verificación del nombre de administrador y contraseña
+    if admin_name == 'Ricardo' and admin_password == 'Acdcministrador':
+        for cotizacion in cotizaciones:
+            if cotizacion['folio'] == folio:
+                cotizacion['respondido'] = True
+                cotizacion['recordatorio'] = 'Respondido'  # Actualiza el recordatorio a "Respondido"
+                flash(f'Cotización con folio {folio} marcada como respondida.')
+                break
+    else:
+        flash('Nombre de administrador o contraseña incorrectos.')
+
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(host='0.0.0.0', debug=True)

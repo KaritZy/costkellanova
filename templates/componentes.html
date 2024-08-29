@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,8 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+      color: #333;
       margin: 20px;
     }
     .form-container {
@@ -35,14 +38,42 @@
     .equipos-list li:hover {
       background-color: #d0d0d0;
     }
-    .componentes-list {
+    table {
+      width: 100%;
+      border-collapse: collapse;
       margin-top: 10px;
-      padding-left: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    #loginScreen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #gestionEquipos {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <div class="form-container">
+  <!-- Pantalla de Login -->
+  <div id="loginScreen" class="form-container">
+    <h2>Iniciar Sesión</h2>
+    <input type="text" id="usernameInput" placeholder="Usuario">
+    <input type="password" id="passwordInput" placeholder="Contraseña">
+    <button onclick="login()">Ingresar</button>
+    <p id="loginError" style="color: red; display: none;">Usuario o contraseña incorrectos.</p>
+  </div>
+
+  <!-- Gestión de Equipos (oculta por defecto) -->
+  <div id="gestionEquipos" class="form-container">
     <h2>Gestión de Equipos de Carga</h2>
     <input type="text" id="equipoInput" placeholder="Nombre del equipo">
     <button onclick="agregarEquipo()">Agregar Equipo</button>
@@ -53,13 +84,42 @@
 
     <div id="componentesSection" style="display:none;">
       <h3>Componentes del Equipo Seleccionado:</h3>
-      <input type="text" id="componenteInput" placeholder="Nombre del componente">
+      <input type="text" id="descripcionInput" placeholder="Descripción del componente">
+      <input type="text" id="codigoInput" placeholder="Código del componente">
+      <input type="text" id="numParteInput" placeholder="N.º de parte">
       <button onclick="agregarComponente()">Agregar Componente</button>
-      <ul id="componentesList" class="componentes-list"></ul>
+      
+      <!-- Tabla para mostrar componentes -->
+      <table id="componentesTable">
+        <thead>
+          <tr>
+            <th>Descripción</th>
+            <th>Código</th>
+            <th>N.º de Parte</th>
+          </tr>
+        </thead>
+        <tbody id="componentesTableBody"></tbody>
+      </table>
     </div>
   </div>
 
   <script>
+    // Variables para la autenticación
+    const validUsername = "Ricardo";
+    const validPassword = "Acdcministrador";
+
+    function login() {
+      const username = document.getElementById('usernameInput').value;
+      const password = document.getElementById('passwordInput').value;
+
+      if (username === validUsername && password === validPassword) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('gestionEquipos').style.display = 'block';
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    }
+
     // Almacenar equipos y componentes en el localStorage
     let equipos = JSON.parse(localStorage.getItem('equipos')) || {};
     let equipoSeleccionado = null;
@@ -106,22 +166,36 @@
     function seleccionarEquipo(equipo) {
       equipoSeleccionado = equipo;
       document.getElementById('componentesSection').style.display = 'block';
-      document.getElementById('componentesList').innerHTML = '';
+      actualizarTablaComponentes();
+    }
+
+    function actualizarTablaComponentes() {
+      const tbody = document.getElementById('componentesTableBody');
+      tbody.innerHTML = '';
       const componentes = equipos[equipoSeleccionado];
       componentes.forEach(componente => {
-        const li = document.createElement('li');
-        li.textContent = componente;
-        document.getElementById('componentesList').appendChild(li);
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${componente.descripcion}</td>
+          <td>${componente.codigo}</td>
+          <td>${componente.numParte}</td>
+        `;
+        tbody.appendChild(row);
       });
     }
 
     function agregarComponente() {
-      const componenteInput = document.getElementById('componenteInput').value.trim();
-      if (componenteInput && equipoSeleccionado) {
-        equipos[equipoSeleccionado].push(componenteInput);
+      const descripcion = document.getElementById('descripcionInput').value.trim();
+      const codigo = document.getElementById('codigoInput').value.trim();
+      const numParte = document.getElementById('numParteInput').value.trim();
+
+      if (descripcion && codigo && numParte && equipoSeleccionado) {
+        equipos[equipoSeleccionado].push({ descripcion, codigo, numParte });
         guardarDatos();
-        seleccionarEquipo(equipoSeleccionado);
-        document.getElementById('componenteInput').value = '';
+        actualizarTablaComponentes();
+        document.getElementById('descripcionInput').value = '';
+        document.getElementById('codigoInput').value = '';
+        document.getElementById('numParteInput').value = '';
       } else if (!equipoSeleccionado) {
         alert('Selecciona un equipo primero.');
       }
@@ -129,7 +203,7 @@
 
     // Inicializar la lista de equipos al cargar la página
     window.onload = actualizarListaEquipos;
-  </script> <script src="scripts.js"></script>
+  </script>
 
 </body>
 </html>
