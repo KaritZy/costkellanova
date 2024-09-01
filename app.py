@@ -22,6 +22,20 @@ class Cotizacion(db.Model):
     numero_serie = db.Column(db.String(50), nullable=False)
     mostrar_recordatorio = db.Column(db.Boolean, default=False)
 
+# Modelo de Equipo
+class Equipo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), unique=True, nullable=False)
+    componentes = db.relationship('Componente', backref='equipo', lazy=True)
+
+# Modelo de Componente
+class Componente(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    descripcion = db.Column(db.String(100), nullable=False)
+    codigo = db.Column(db.String(100), nullable=False)
+    num_parte = db.Column(db.String(100), nullable=False)
+    equipo_id = db.Column(db.Integer, db.ForeignKey('equipo.id'), nullable=False)
+
 # Crear la base de datos (solo la primera vez)
 with app.app_context():
     db.create_all()
@@ -97,8 +111,8 @@ def buscar_cotizacion():
 
 @app.route('/responder/<int:folio>', methods=['POST'])
 def responder_cotizacion(folio):
-    admin_name = request.form['admin_name']
-    admin_password = request.form['admin_password']
+    admin_name = request.form['Ricardo']
+    admin_password = request.form['Acdcministrador']
     
     # Verificación del nombre de administrador y contraseña
     if admin_name == 'Ricardo' and admin_password == 'Acdcministrador':
