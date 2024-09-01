@@ -5,15 +5,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const adminForm = document.getElementById('adminForm');  // Formulario de autenticación de administrador
   let currentFolio = null;
 
-  // Función para abrir el modal de autenticación
-  function openModal(folio) {
-      console.log('Folio recibido:', folio);  // Depuración: Verifica el folio recibido
-      currentFolio = folio;  // Guardar el folio actual
-      document.getElementById('authModal').style.display = 'block';
-      adminForm.action = '/responder/' + folio;  // Configurar la acción del formulario con el folio correcto
-      console.log('Formulario configurado para enviar a:', adminForm.action);  // Depuración: Verifica la URL de acción
-  }
-
+    // Función para abrir el modal de autenticación de administrador.
+    function openModal(folio) {
+        currentFolio = folio; // Asigna el folio actual a la variable global.
+        // Muestra el modal de autenticación.
+        document.getElementById('authModal').style.display = 'block';
+        // Cambia la acción del formulario para que apunte a la ruta correcta con el folio.
+        document.getElementById('adminForm').action = '/responder/' + folio;
+        console.log('Folio actual:', currentFolio); // Verifica el valor del folio
+        console.log('Formulario acción:', document.getElementById('adminForm').action); // Verifica la acción del formulario
+    }
+    // Manejar el envío del formulario de autenticación del administrador
+    adminForm.addEventListener('submit', (event) => {
+        event.preventDefault();  // Previene el envío por defecto para verificar la lógica primero
+        if (adminForm.action.includes('/responder/') && currentFolio !== null) {
+            adminForm.submit();  // Enviar el formulario programáticamente
+        } else {
+            alert('Error: Folio no configurado correctamente.');
+        }
+    });
   // Función para cerrar el modal de autenticación
   function closeModal() {
       document.getElementById('authModal').style.display = 'none';

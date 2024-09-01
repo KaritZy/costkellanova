@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate  # Asegúrate de que está importado
 from datetime import datetime
 import os
 
@@ -10,6 +11,7 @@ app.secret_key = 'tu_clave_secreta_aqui'  # Reemplaza con tu clave secreta
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///cotizaciones.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)  # Asegúrate de que esto esté presente
 
 # Modelo de Cotización
 class Cotizacion(db.Model):
@@ -111,23 +113,49 @@ def buscar_cotizacion():
 
 @app.route('/responder/<int:folio>', methods=['POST'])
 def responder_cotizacion(folio):
-    print(f"Folio recibido: {folio}")  # Debugging
     admin_name = request.form['admin_name']
     admin_password = request.form['admin_password']
-    
+
+    # Verificación del nombre de administrador y contraseña
     if admin_name == 'Ricardo' and admin_password == 'Acdcministrador':
-        cotizacion = Cotizacion.query.get(folio)
+        cotizacion = Cotizacion.query.get(folio)  # Usa query.get() para obtener por ID
         if cotizacion:
             cotizacion.respondido = True
-            cotizacion.recordatorio = 'Respondido'
-            db.session.commit()
+            db.session.commit()  # Asegúrate de hacer commit para guardar los cambios
             flash(f'Cotización con folio {folio} marcada como respondida.')
         else:
-            flash(f'Cotización con folio {folio} no encontrada.')
+            flash('Cotización no encontrada.')
     else:
         flash('Nombre de administrador o contraseña incorrectos.')
 
     return redirect(url_for('index'))
+
+
+@app.route('/agregar_equipo', methods=['POST'])
+def agregar_equipo():
+    nombre = request.form['nombre']
+    nuevo_equipo = Equipo(nombre=nombre)
+    db.session.add(nuevo_equipo)
+    db.session.commit()
+    flash('Equipo agregado exitosamente.')
+    return redirect(url_for('mostrar_equipos'))
+
+@app.route('/agregar_componente', methods=['POST'])
+def agregar_componente():
+    descripcion = request.form['descripcion']
+    codigo = request.form['codigo']
+    num_parte = request.form['num_parte']
+    equipo_id = request.form['equipo_id']
+    nuevo_componente = Componente(
+        descripcion=descripcion,
+        codigo=codigo,
+        num_parte=num_parte,
+        equipo_id=equipo_id
+    )
+    db.session.add(nuevo_componente)
+    db.session.commit()
+    flash('Componente agregado exitosamente.')
+    return redirect(url_for('mostrar_componentes', equipo_id=equipo_id))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

@@ -78,6 +78,9 @@
     <input type="text" id="equipoInput" placeholder="Nombre del equipo">
     <button onclick="agregarEquipo()">Agregar Equipo</button>
     <button onclick="eliminarEquipo()">Eliminar Equipo Seleccionado</button>
+
+    <!-- Campo de búsqueda de equipos -->
+    <input type="text" id="buscarEquipoInput" placeholder="Buscar equipo" onkeyup="buscarEquipo()">
     
     <h3>Lista de Equipos:</h3>
     <ul id="equiposList" class="equipos-list"></ul>
@@ -128,14 +131,16 @@
       localStorage.setItem('equipos', JSON.stringify(equipos));
     }
 
-    function actualizarListaEquipos() {
+    function actualizarListaEquipos(filtro = '') {
       const listaEquipos = document.getElementById('equiposList');
       listaEquipos.innerHTML = '';
       for (const equipo in equipos) {
-        const li = document.createElement('li');
-        li.textContent = equipo;
-        li.onclick = () => seleccionarEquipo(equipo);
-        listaEquipos.appendChild(li);
+        if (equipo.toLowerCase().includes(filtro.toLowerCase())) {
+          const li = document.createElement('li');
+          li.textContent = equipo;
+          li.onclick = () => seleccionarEquipo(equipo);
+          listaEquipos.appendChild(li);
+        }
       }
     }
 
@@ -199,6 +204,12 @@
       } else if (!equipoSeleccionado) {
         alert('Selecciona un equipo primero.');
       }
+    }
+
+    // Función para buscar equipos
+    function buscarEquipo() {
+      const filtro = document.getElementById('buscarEquipoInput').value;
+      actualizarListaEquipos(filtro);
     }
 
     // Inicializar la lista de equipos al cargar la página

@@ -144,12 +144,16 @@
                             <td>{{ cotizacion.cotizacion }}</td>
                             <!-- Mostrar "Recordatorio" con el estado actual -->
                             <td class="recordatorio">
-                                {{ cotizacion.recordatorio }}
+                                {% if cotizacion.respondido %}
+                                    <span style="color: green;">Respondida</span>
+                                {% else %}
+                                    <span style="color: red;">Pendiente</span>
+                                {% endif %}
                             </td>
                             <td>{{ cotizacion.numero_serie }}</td>
                             <td>
                                 {% if not cotizacion.respondido %}
-                                <button onclick="openModal('{{ cotizacion.folio }}')">Marcar como Respondida</button>
+                                <button onclick="openModal('{{ cotizacion.id }}')">Marcar como Respondida</button>
                                 {% endif %}
                             </td>
                         </tr>
