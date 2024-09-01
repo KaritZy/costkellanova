@@ -82,7 +82,7 @@
     <div class="content">
         <!-- Sección de Registro de Cotizaciones -->
         <section id="registro">
-            <h1>Proyecto Mark1</h1>
+            <h1 style="text-align: center;">Proyecto Mark1</h1>
             <h2>Registrar Cotización</h2>
             <form action="/agregar" method="POST">
                 <label for="fecha">Fecha:</label>
@@ -100,6 +100,24 @@
                 <button type="submit">Registrar Cotización</button>
             </form>
         </section>
+
+        <!-- Sección de Búsqueda de Cotizaciones -->
+        <section id="buscar">
+            <h2>Buscar Cotización</h2>
+            <form action="/buscar" method="POST">
+                <label for="criterio">Criterio de Búsqueda:</label>
+                <select id="criterio" name="criterio">
+                    <option value="folio">Folio</option>
+                    <option value="fecha">Fecha</option>
+                </select><br>
+
+             <label for="valor">Valor de Búsqueda:</label>
+                <input type="text" id="valor" name="valor" required><br>
+
+                <button type="submit">Buscar</button>
+            </form>
+        </section>
+
 
         <!-- Sección de Listado de Cotizaciones -->
         <section id="listado">
@@ -120,7 +138,7 @@
                     <tbody>
                         {% for cotizacion in cotizaciones %}
                         <tr>
-                            <td>{{ cotizacion.folio }}</td>
+                            <td>{{ cotizacion.id }}</td>
                             <td>{{ cotizacion.fecha }}</td>
                             <td>{{ cotizacion.componente }}</td>
                             <td>{{ cotizacion.cotizacion }}</td>

@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate  # Importa Flask-Migrate
 from datetime import datetime
 import os
 
@@ -11,7 +10,6 @@ app.secret_key = 'tu_clave_secreta_aqui'  # Reemplaza con tu clave secreta
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///cotizaciones.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-migrate = Migrate(app, db)  # Configura las migraciones
 
 # Modelo de Cotización
 class Cotizacion(db.Model):
