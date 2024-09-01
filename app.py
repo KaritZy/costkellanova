@@ -111,17 +111,19 @@ def buscar_cotizacion():
 
 @app.route('/responder/<int:folio>', methods=['POST'])
 def responder_cotizacion(folio):
-    admin_name = request.form['Ricardo']
-    admin_password = request.form['Acdcministrador']
+    print(f"Folio recibido: {folio}")  # Debugging
+    admin_name = request.form['admin_name']
+    admin_password = request.form['admin_password']
     
-    # Verificación del nombre de administrador y contraseña
     if admin_name == 'Ricardo' and admin_password == 'Acdcministrador':
         cotizacion = Cotizacion.query.get(folio)
         if cotizacion:
             cotizacion.respondido = True
-            cotizacion.recordatorio = 'Respondido'  # Actualiza el recordatorio a "Respondido"
+            cotizacion.recordatorio = 'Respondido'
             db.session.commit()
             flash(f'Cotización con folio {folio} marcada como respondida.')
+        else:
+            flash(f'Cotización con folio {folio} no encontrada.')
     else:
         flash('Nombre de administrador o contraseña incorrectos.')
 
