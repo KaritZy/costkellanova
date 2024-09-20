@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>David Peruyero - Control de Cotizaciones</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5); 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 30%;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Bienvenido, David Peruyero</h1>
+
+    <!-- Listado de Cotizaciones -->
+    <h2>Listado de Cotizaciones</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Folio</th>
+                    <th>Fecha</th>
+                    <th>Componente</th>
+                    <th>Código</th>
+                    <th>N.º de Parte</th>
+                    <th>Actualización</th>
+                    <th>Nombre del Usuario</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cotizacion in cotizaciones %}
+                <tr>
+                    <td>{{ cotizacion.id }}</td>
+                    <td>{{ cotizacion.fecha }}</td>
+                    <td>{{ cotizacion.componente }}</td>
+                    <td>{{ cotizacion.codigo }}</td>
+                    <td>{{ cotizacion.cotizacion }}</td>
+                    <td class="recordatorio">
+                        {% if cotizacion.respondido %}
+                            <span style="color: green;">Cotizado</span>
+                        {% else %}
+                            <span style="color: red;">Pendiente</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ cotizacion.numero_serie }}</td>
+                    <td>
+                        {% if not cotizacion.respondido %}
+                        <form action="/enviar_mensaje/{{ cotizacion.id }}" method="POST" style="display:inline;">
+                            <input type="hidden" name="admin_name" value="David">
+                            <input type="hidden" name="admin_password" value="Peruyero">
+                            <button type="submit" class="btn-green">Enviar Mensaje</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para mensajes -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Enviar Mensaje</h2>
+            <form id="messageForm" method="POST">
+                <input type="hidden" name="admin_name" value="David">
+                <input type="hidden" name="admin_password" value="Peruyero">
+                <textarea name="mensaje" placeholder="Escribe tu mensaje aquí" required></textarea>
+                <button type="submit" class="btn-green">Enviar</button>
+            </form>
+        </div>
+    </div>
+
+    <a href="{{ url_for('index') }}">Regresar al inicio</a>
+
+    <script>
+        function closeModal() {
+            document.getElementById('messageModal').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>

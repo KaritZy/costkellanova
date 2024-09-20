@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papelera de Cotizaciones</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h2>Papelera de Cotizaciones</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Folio</th>
+                <th>Fecha</th>
+                <th>Componente</th>
+                <th>Código</th>
+                <th>N.º de Parte</th>
+                <th>Actualización</th>
+                <th>Nombre del Usuario</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cotizacion in cotizaciones %}
+            <tr>
+                <td>{{ cotizacion.id }}</td>
+                <td>{{ cotizacion.fecha }}</td>
+                <td>{{ cotizacion.componente }}</td>
+                <td>{{ cotizacion.codigo }}</td>
+                <td>{{ cotizacion.cotizacion }}</td>
+                <td>{{ cotizacion.recordatorio }}</td>
+                <td>{{ cotizacion.numero_serie }}</td>
+                <td>
+                    <form action="{{ url_for('restaurar_cotizacion', id=cotizacion.id) }}" method="POST">
+                        <button type="submit" class="btn-green">Restaurar</button>
+                    </form>
+                    <form action="{{ url_for('eliminar_definitivo', id=cotizacion.id) }}" method="POST">
+                        <button type="submit" class="btn-red">Eliminar Definitivamente</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

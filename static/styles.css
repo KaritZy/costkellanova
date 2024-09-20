@@ -1,47 +1,52 @@
 /* Variables CSS para colores */
 :root {
-    --primary-color: #007bff;
-    --secondary-color: #0056b3;
-    --text-color: #333;
-    --bg-color: hsl(45, 88%, 42%);
+    --primary-color: #004080; /* Azul oscuro para fondo de la página */
+    --secondary-color: #0056b3; /* Azul medio para botones */
+    --text-color: #ffffff; /* Texto blanco */
+    --bg-color: #e6f2ff; /* Azul claro para contenedores y inputs */
+    --input-bg-color: #cce6ff; /* Azul aún más claro para inputs */
+    --menu-bg-color: #003366; /* Azul para la barra lateral */
+    --hover-color: #336699; /* Color para hover en elementos interactivos */
+    --table-text-color: #000000; /* Negro para texto de la tabla */
+    --danger-color: red; /* Rojo para botones de eliminar */
+    --success-color: green; /* Verde para botones de buscar */
 }
 
-/* Centrar contenido */
+/* Estilo general del cuerpo */
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
-    color: #333;
+    background-color: var(--primary-color);
+    color: var(--text-color);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
+    justify-content: flex-start;
     margin: 0;
-    padding: 0;
-    position: relative;
+    padding: 20px;
+    height: 100vh;
 }
 
 /* Contenedor principal */
 .container {
-    background-color: #ffffff;
+    background-color: var(--bg-color);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     width: 90%;
     max-width: 800px;
     text-align: center;
-    position: relative;
+    margin-top: 20px;
 }
 
 /* Títulos */
 h1, h2 {
-    color: var(--text-color);
+    color: var(--primary-color);
     margin-bottom: 20px;
 }
 
 /* Formularios */
 form {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     text-align: left;
 }
 
@@ -49,6 +54,7 @@ form label {
     font-weight: bold;
     margin-top: 10px;
     display: inline-block;
+    color: var(--primary-color);
 }
 
 form input, form select {
@@ -56,13 +62,15 @@ form input, form select {
     padding: 10px;
     margin: 5px 0 10px;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--primary-color);
+    background-color: var(--input-bg-color);
+    color: var(--primary-color);
 }
 
-/* Botones */
+/* Botones generales */
 button {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
@@ -71,7 +79,69 @@ button {
 }
 
 button:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--hover-color);
+}
+
+/* Botón Buscar */
+button.buscar {
+    background-color: var(--success-color);
+    color: var(--text-color);
+}
+
+button.buscar:hover {
+    background-color: darkgreen;
+}
+
+/* Botón Eliminar */
+button.eliminar {
+    background-color: var(--danger-color);
+    color: var(--text-color);
+}
+
+button.eliminar:hover {
+    background-color: darkred;
+}
+
+/* Menú de Navegación Lateral */
+.menu-bar {
+    background-color: var(--menu-bg-color);
+    padding: 10px;
+    width: 20%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.menu-bar a {
+    color: #ffffff;
+    margin: 15px 0;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+.menu-bar a:hover {
+    background-color: var(--hover-color);
+    border-radius: 5px;
+}
+
+/* Contenido Principal */
+.content {
+    margin-left: 22%;
+    width: 75%;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: var(--bg-color);
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
 }
 
 /* Tabla */
@@ -89,90 +159,12 @@ table th, table td {
 
 table th {
     background-color: var(--primary-color);
-    color: white;
+    color: var(--text-color);
 }
 
 table td {
-    background-color: #f9f9f9;
-}
-
-/* Fondo animado */
-body::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('https://path-to-your-background-image.jpg') no-repeat center center/cover;
-    z-index: -1;
-    opacity: 0.1;
-}
-
-/* Efectos visuales */
-.container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 100%);
-    z-index: -1;
-    border-radius: 10px;
-}
-
-/* Menú de Navegación Lateral */
-.menu-bar {
-    background-color: #34495e;
-    padding: 10px;
-    width: 20%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-}
-
-.menu-bar a {
-    color: #fff;
-    margin: 15px 0;
-    text-decoration: none;
-    font-weight: bold;
-    padding: 10px;
-    width: 100%;
-    text-align: center;
-    transition: background 0.3s;
-}
-
-.menu-bar a:hover {
-    background-color: #2c3e50;
-    border-radius: 5px;
-}
-
-/* Contenido Principal */
-.content {
-    margin-left: 22%;
-    width: 75%;
-    padding: 20px;
-    box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 15px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    overflow-y: auto;
-}
-
-/* Estilos para Estado de Cotización */
-.recordatorio {
-    color: #e74c3c;
-    font-weight: bold;
-}
-
-.respondido {
-    color: #27ae60;
-    font-weight: bold;
+    background-color: var(--bg-color);
+    color: var(--table-text-color);
 }
 
 /* Media Queries para Ajustes Responsivos */

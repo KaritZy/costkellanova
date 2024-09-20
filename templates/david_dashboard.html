@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de David Peruyero</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h2>Dashboard de David Peruyero</h2>
+
+    <!-- Mostrar mensajes flash -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Folio</th>
+                <th>Fecha</th>
+                <th>Componente</th>
+                <th>Código</th>
+                <th>N.º de Parte</th>
+                <th>Actualización</th>
+                <th>Nombre del Usuario</th>
+                <th>Mensaje</th>
+                <th>Enviar Mensaje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cotizacion in cotizaciones %}
+            <tr>
+                <td>{{ cotizacion.id }}</td>
+                <td>{{ cotizacion.fecha }}</td>
+                <td>{{ cotizacion.componente }}</td>
+                <td>{{ cotizacion.codigo }}</td>
+                <td>{{ cotizacion.cotizacion }}</td>
+                <td>{% if cotizacion.respondido %}Cotizado{% else %}Pendiente{% endif %}</td>
+                <td>{{ cotizacion.numero_serie }}</td>
+                <td>{{ cotizacion.mensaje_david or '' }}</td>
+                <td>
+                    <form action="{{ url_for('enviar_mensaje_david', folio=cotizacion.id) }}" method="POST">
+                        <input type="text" name="mensaje" placeholder="Escribe un mensaje" required>
+                        <button type="submit">Enviar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
