@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control de Cotizaciones KELLANOVA</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         /* Estilos del modal */
@@ -25,7 +26,8 @@
             margin: 15% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 30%;
+            width: 90%;
+            max-width: 400px;
             border-radius: 10px;
             text-align: center;
         }
@@ -59,12 +61,14 @@
 
     {% if not session.get('authenticated') %}
     <!-- Pantalla de Login -->
-    <div class="content">
-        <h2>Iniciar Sesión</h2>
+    <div class="container mt-5">
+        <h2 class="text-center">Iniciar Sesión</h2>
         <form action="{{ url_for('home') }}" method="POST">
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" required><br>
-            <button type="submit" class="btn-green">Ingresar</button>
+            <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
         </form>
     </div>
     {% else %}
@@ -75,55 +79,69 @@
         <a href="#listado">Listado de Cotizaciones</a>
         <a href="{{ url_for('componentes') }}">Componentes</a>
         <a href="#" onclick="openModal('papelera')">Papelera</a>
-        <a href="{{ url_for('david_dashboard') }}">David Peruyero</a> <!-- Botón para David Peruyero -->
+        <a href="{{ url_for('david_dashboard') }}">David Peruyero</a>
     </div>
 
     <!-- Contenido Principal -->
     <div class="content">
-        <section id="registro">
-            <h1 style="text-align: center;">GESTIÓN DE COTIZACIONES</h1>
+        <section id="registro" class="mt-5">
+            <h1 class="text-center">GESTIÓN DE COTIZACIONES</h1>
             <h2>Registrar Cotización</h2>
             <form action="/agregar" method="POST">
-                <label for="fecha">Fecha:</label>
-                <input type="date" id="fecha" name="fecha" required><br>
+                <div class="form-group">
+                    <label for="fecha">Fecha:</label>
+                    <input type="date" id="fecha" name="fecha" class="form-control" required>
+                </div>
 
-                <label for="componente">Componente a Cotizar:</label>
-                <input type="text" id="componente" name="componente" required><br>
+                <div class="form-group">
+                    <label for="componente">Componente a Cotizar:</label>
+                    <input type="text" id="componente" name="componente" class="form-control" required>
+                </div>
 
-                <label for="codigo">Código:</label>
-                <input type="text" id="codigo" name="codigo">
+                <div class="form-group">
+                    <label for="codigo">Código:</label>
+                    <input type="text" id="codigo" name="codigo" class="form-control">
+                </div>
 
-                <label for="cotizacion">N.º de Parte:</label>
-                <input type="text" id="cotizacion" name="cotizacion" required><br>
+                <div class="form-group">
+                    <label for="cotizacion">N.º de Parte:</label>
+                    <input type="text" id="cotizacion" name="cotizacion" class="form-control" required>
+                </div>
 
-                <label for="numero_serie">Nombre de Usuario:</label>
-                <input type="text" id="numero_serie" name="numero_serie" required><br>
+                <div class="form-group">
+                    <label for="numero_serie">Nombre de Usuario:</label>
+                    <input type="text" id="numero_serie" name="numero_serie" class="form-control" required>
+                </div>
 
-                <button type="submit" class="btn-green">Registrar Cotización</button>
+                <button type="submit" class="btn btn-success btn-block">Registrar Cotización</button>
             </form>
         </section>
 
-        <section id="buscar">
+        <section id="buscar" class="mt-5">
             <h2>Buscar Cotización</h2>
             <form action="/buscar" method="POST">
-                <label for="criterio">Criterio de Búsqueda:</label>
-                <select id="criterio" name="criterio">
-                    <option value="folio">Folio</option>
-                    <option value="fecha">Fecha</option>
-                </select><br>
+                <div class="form-group">
+                    <label for="criterio">Criterio de Búsqueda:</label>
+                    <select id="criterio" name="criterio" class="form-control">
+                        <option value="folio">Folio</option>
+                        <option value="fecha">Fecha</option>
+                    </select>
+                </div>
 
-                <label for="valor">Valor de Búsqueda:</label>
-                <input type="text" id="valor" name="valor" required><br>
+                <div class="form-group">
+                    <label for="valor">Valor de Búsqueda:</label>
+                    <input type="text" id="valor" name="valor" class="form-control" required>
+                </div>
 
-                <button type="submit" class="btn-green">Buscar</button>
+                <button type="submit" class="btn btn-success btn-block">Buscar</button>
             </form>
         </section>
 
-        <section id="listado">
+        <section id="listado" class="mt-5">
             <h2>Listado de Cotizaciones</h2>
-            <div class="table-container">
-                <table>
-                    <thead>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
                         <tr>
                             <th>Folio</th>
                             <th>Fecha</th>
@@ -155,8 +173,8 @@
                             <td>{{ cotizacion.mensaje_david or 'Sin mensaje' }}</td>
                             <td>
                                 {% if not cotizacion.respondido %}
-                                <button onclick="openModal('responder/{{ cotizacion.id }}')" class="btn-green">Marcar como Respondida</button>
-                                <button onclick="openModal('eliminar/{{ cotizacion.id }}')" class="btn-red">Eliminar</button>
+                                <button onclick="openModal('responder/{{ cotizacion.id }}')" class="btn btn-success">Marcar como Respondida</button>
+                                <button onclick="openModal('eliminar/{{ cotizacion.id }}')" class="btn btn-danger">Eliminar</button>
                                 {% endif %}
                             </td>
                         </tr>
@@ -176,7 +194,7 @@
             <form id="adminForm" method="POST">
                 <input type="text" name="admin_name" placeholder="Nombre de Administrador" required>
                 <input type="password" name="admin_password" placeholder="Contraseña" required>
-                <button type="submit" class="btn-green">Confirmar</button>
+                <button type="submit" class="btn btn-primary">Confirmar</button>
             </form>
         </div>
     </div>
