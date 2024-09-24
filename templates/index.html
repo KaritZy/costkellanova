@@ -165,13 +165,8 @@
                             <td class="recordatorio">
                                 {% if cotizacion.respondido %}
                                 <span style="color: green;">Cotizado</span>
-                                <button onclick="location.href='/cancelar/{{ cotizacion.id }}'" class="btn btn-danger btn-sm">Cancelar</button>
-                                {% elif cotizacion.recordatorio == 'Cancelado' %}
-                                <span style="color: red;">Cancelado</span>
-                                <button onclick="location.href='/eliminar_definitivo/{{ cotizacion.id }}'" class="btn btn-danger btn-sm">Eliminar</button>
                                 {% else %}
                                 <span style="color: red;">Pendiente</span>
-                                <button onclick="openModal('responder/{{ cotizacion.id }}')" class="btn btn-success btn-sm">Marcar como Respondida</button>
                                 {% endif %}
                             </td>
                             <td>{{ cotizacion.numero_serie }}</td>

@@ -28,7 +28,7 @@ class Cotizacion(db.Model):
     componente = db.Column(db.String(100), nullable=False)
     codigo = db.Column(db.String(50), nullable=True)  # Permite nulos
     cotizacion = db.Column(db.String(100), nullable=False)
-    recordatorio = db.Column(db.String(20), default='Pendiente')  # "Pendiente", "Cotizado", "Cancelado"
+    recordatorio = db.Column(db.String(20), default='Pendiente')
     respondido = db.Column(db.Boolean, default=False)
     numero_serie = db.Column(db.String(50), nullable=False)
     mostrar_recordatorio = db.Column(db.Boolean, default=False)
@@ -43,6 +43,7 @@ class Papelera(db.Model):
     recordatorio = db.Column(db.String(20), default='Pendiente')
     respondido = db.Column(db.Boolean, default=False)
     numero_serie = db.Column(db.String(50), nullable=False)
+    mostrar_recordatorio = db.Column(db.Boolean, default=False)
 
 class Equipo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -87,7 +88,7 @@ def logout():
     flash('Sesión cerrada.')
     return redirect(url_for('home'))
 
-# Rutas para gestión de cotizaciones, componentes, equipos, y papelera
+# Resto de rutas para gestión de cotizaciones, componentes, equipos, y papelera
 @app.route('/agregar', methods=['POST'])
 def agregar_cotizacion():
     fecha = request.form['fecha']
@@ -127,7 +128,6 @@ def buscar_cotizacion():
 
     return render_template('index.html', cotizaciones=resultados)
 
-# Ruta para David Peruyero
 @app.route('/david_dashboard', methods=['GET', 'POST'])
 def david_dashboard():
     if 'david_authenticated' not in session:
@@ -179,7 +179,6 @@ def responder_cotizacion(folio):
         cotizacion = Cotizacion.query.get(folio)
         if cotizacion:
             cotizacion.respondido = True
-            cotizacion.recordatorio = 'Cotizado'
             db.session.commit()
             flash(f'Cotización con folio {folio} marcada como respondida.')
         else:
@@ -189,41 +188,76 @@ def responder_cotizacion(folio):
 
     return redirect(url_for('index'))
 
-# Función para cancelar una cotización
-@app.route('/cancelar/<int:folio>', methods=['GET'])
-def cancelar_cotizacion(folio):
-    cotizacion = Cotizacion.query.get(folio)
-    if cotizacion and cotizacion.respondido:
-        cotizacion.recordatorio = 'Cancelado'
-        db.session.commit()
-        flash(f'Cotización con folio {folio} ha sido cancelada.')
+@app.route('/eliminar/<int:folio>', methods=['POST'])
+def eliminar_cotizacion(folio):
+    admin_name = request.form['admin_name']
+    admin_password = request.form['admin_password']
+
+    if admin_name == 'Ricardo' and admin_password == 'Acdcministrador':
+        cotizacion = Cotizacion.query.get(folio)
+        if cotizacion:
+            papelera = Papelera(
+                fecha=cotizacion.fecha,
+                componente=cotizacion.componente,
+                codigo=cotizacion.codigo,
+                cotizacion=cotizacion.cotizacion,
+                recordatorio=cotizacion.recordatorio,
+                respondido=cotizacion.respondido,
+                numero_serie=cotizacion.numero_serie,
+                mostrar_recordatorio=cotizacion.mostrar_recordatorio
+            )
+            db.session.add(papelera)
+
+            db.session.delete(cotizacion)
+            db.session.commit()
+            flash(f'Cotización con folio {folio} ha sido eliminada y movida a la papelera.')
+        else:
+            flash('Cotización no encontrada.')
     else:
-        flash('Cotización no encontrada o no cotizada.')
+        flash('Nombre de administrador o contraseña incorrectos.')
+
     return redirect(url_for('index'))
 
-# Función para eliminar una cotización cancelada
-@app.route('/eliminar_definitivo/<int:folio>', methods=['GET', 'POST'])
-def eliminar_definitivo(folio):
-    cotizacion = Cotizacion.query.get(folio)
-    if cotizacion and cotizacion.recordatorio == 'Cancelado':
-        papelera = Papelera(
-            fecha=cotizacion.fecha,
-            componente=cotizacion.componente,
-            codigo=cotizacion.codigo,
-            cotizacion=cotizacion.cotizacion,
-            recordatorio=cotizacion.recordatorio,
-            respondido=cotizacion.respondido,
-            numero_serie=cotizacion.numero_serie
-        )
-        db.session.add(papelera)
-        db.session.delete(cotizacion)
-        db.session.commit()
-        flash(f'Cotización con folio {folio} ha sido eliminada y movida a la papelera.')
-    else:
-        flash('Cotización no encontrada o no está en estado "Cancelado".')
-    return redirect(url_for('index'))
+@app.route('/mostrar_equipos')
+def mostrar_equipos():
+    equipos = Equipo.query.all()
+    return render_template('equipos.html', equipos=equipos)
 
-# Papelera y Restaurar Cotizaciones
+@app.route('/agregar_equipo', methods=['POST'])
+def agregar_equipo():
+    nombre = request.form['nombre']
+    nuevo_equipo = Equipo(nombre=nombre)
+    db.session.add(nuevo_equipo)
+    db.session.commit()
+    flash('Equipo agregado exitosamente.')
+    return redirect(url_for('mostrar_equipos'))
+
+@app.route('/mostrar_componentes/<int:equipo_id>')
+def mostrar_componentes(equipo_id):
+    componentes = Componente.query.filter_by(equipo_id=equipo_id).all()
+    return render_template('componentes.html', componentes=componentes)
+
+@app.route('/agregar_componente', methods=['POST'])
+def agregar_componente():
+    descripcion = request.form['descripcion']
+    codigo = request.form['codigo']
+    num_parte = request.form['num_parte']
+    equipo_id = request.form['equipo_id']
+    nuevo_componente = Componente(
+        descripcion=descripcion,
+        codigo=codigo,
+        num_parte=num_parte,
+        equipo_id=equipo_id
+    )
+    db.session.add(nuevo_componente)
+    db.session.commit()
+    flash('Componente agregado exitosamente.')
+    return redirect(url_for('mostrar_componentes', equipo_id=equipo_id))
+
+@app.route('/componentes')
+def componentes():
+    return render_template('componentes.html')
+
 @app.route('/papelera', methods=['GET', 'POST'])
 def ver_papelera():
     admin_name = request.form.get('admin_name')
@@ -236,7 +270,6 @@ def ver_papelera():
         flash('Nombre de administrador o contraseña incorrectos.')
         return redirect(url_for('index'))
 
-# Restaurar una cotización desde la papelera
 @app.route('/restaurar_cotizacion/<int:id>', methods=['POST'])
 def restaurar_cotizacion(id):
     cotizacion = Papelera.query.get(id)
@@ -248,7 +281,8 @@ def restaurar_cotizacion(id):
             cotizacion=cotizacion.cotizacion,
             recordatorio=cotizacion.recordatorio,
             respondido=cotizacion.respondido,
-            numero_serie=cotizacion.numero_serie
+            numero_serie=cotizacion.numero_serie,
+            mostrar_recordatorio=cotizacion.mostrar_recordatorio
         )
         db.session.add(nueva_cotizacion)
         db.session.delete(cotizacion)
@@ -258,9 +292,8 @@ def restaurar_cotizacion(id):
         flash('Cotización no encontrada en la papelera.')
     return redirect(url_for('ver_papelera'))
 
-# Eliminar definitivamente desde la papelera
-@app.route('/eliminar_definitivo_papelera/<int:id>', methods=['POST'])
-def eliminar_definitivo_papelera(id):
+@app.route('/eliminar_definitivo/<int:id>', methods=['POST'])
+def eliminar_definitivo(id):
     cotizacion = Papelera.query.get(id)
     if cotizacion:
         db.session.delete(cotizacion)
