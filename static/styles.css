@@ -3,7 +3,7 @@
     --secondary-color: #0056b3; /* Azul medio para botones */
     --text-color: #ffffff; /* Texto blanco */
     --bg-color: #e6f2ff; /* Azul claro para contenedores y inputs */
-    --input-bg-color: #40E0D0; /* Azul turquesa aún más claro para inputs */
+    --input-bg-color: #cce6ff; /* Azul aún más claro para inputs */
     --menu-bg-color: #003366; /* Azul para la barra lateral */
     --hover-color: #336699; /* Color para hover en elementos interactivos */
     --table-text-color: #000000; /* Negro para texto de la tabla */
@@ -27,7 +27,7 @@ body {
 
 /* Contenedor principal */
 .container {
-    background-color: var(--bg-color);
+    background-color: #40E0D0; /* Azul turquesa */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
