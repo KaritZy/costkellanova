@@ -26,11 +26,12 @@ class Cotizacion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fecha = db.Column(db.String(10), nullable=False)
     componente = db.Column(db.String(100), nullable=False)
-    codigo = db.Column(db.String(50), nullable=True)  # Permite nulos
+    codigo = db.Column(db.String(50), nullable=True)
     cotizacion = db.Column(db.String(100), nullable=False)
+    cantidad = db.Column(db.Integer, nullable=False)  # Nuevo campo para cantidad
     recordatorio = db.Column(db.String(20), default='Pendiente')
     respondido = db.Column(db.Boolean, default=False)
-    cancelado = db.Column(db.Boolean, default=False)  # Nuevo campo para cancelado
+    cancelado = db.Column(db.Boolean, default=False)
     numero_serie = db.Column(db.String(50), nullable=False)
     mostrar_recordatorio = db.Column(db.Boolean, default=False)
     mensaje_david = db.Column(db.String(255), nullable=True)
@@ -96,6 +97,7 @@ def agregar_cotizacion():
     componente = request.form['componente']
     codigo = request.form['codigo']
     cotizacion = request.form['cotizacion']
+    cantidad = request.form['cantidad']  # Capturar el nuevo campo
     numero_serie = request.form['numero_serie']
 
     nueva_cotizacion = Cotizacion(
@@ -103,6 +105,7 @@ def agregar_cotizacion():
         componente=componente,
         codigo=codigo,
         cotizacion=cotizacion,
+        cantidad=cantidad,  # Guardar el valor de cantidad
         numero_serie=numero_serie
     )
 
@@ -110,6 +113,7 @@ def agregar_cotizacion():
     db.session.commit()
     flash('Cotización registrada exitosamente.')
     return redirect(url_for('index'))
+
 
 @app.route('/buscar', methods=['POST'])
 def buscar_cotizacion():
