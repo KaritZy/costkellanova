@@ -239,3 +239,31 @@ table td {
         font-size: 14px;
     }
 }
+/* Asegura que los botones estén alineados correctamente en las celdas */
+.action-buttons {
+    display: flex;
+    flex-direction: column; /* Botones uno debajo del otro */
+    gap: 10px; /* Espacio entre botones */
+}
+
+.action-buttons button {
+    width: 100%; /* Botón ocupa el ancho completo de la celda */
+}
+/* Estilo personalizado para el botón rojo */
+.btn-red {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-red:hover {
+    background-color: darkred;
+}
+/* Estilos generales de la página */
+.titulo-negro {
+    color: black;
+}

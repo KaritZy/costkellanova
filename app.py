@@ -230,10 +230,7 @@ def cancelar_cotizacion(folio):
         cotizacion.respondido = False  # Desmarcar como respondido
         cotizacion.cancelado = True  # Marcar como cancelado
         db.session.commit()
-        print(f'Cotización {folio} ha sido cancelada: {cotizacion.cancelado}')  # Imprimir en consola
         flash(f'Cotización con folio {folio} ha sido cancelada.')
-    else:
-        flash('Cotización no encontrada o no está en estado cotizado.')
     return redirect(url_for('index'))
 
 @app.route('/mostrar_equipos')

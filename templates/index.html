@@ -85,8 +85,8 @@
     <!-- Contenido Principal -->
     <div class="content">
         <section id="registro" class="mt-5">
-            <h1 class="text-center">GESTIÓN DE COTIZACIONES</h1>
-            <h2>Registrar Cotización</h2>
+            <h1 class="text-center" style="color: black;">GESTIÓN DE COTIZACIONES</h1>
+            <h2 style="color: black;">Registrar Cotización</h2>
             <form action="/agregar" method="POST">
                 <div class="form-group">
                     <label for="fecha">Fecha:</label>
@@ -110,7 +110,7 @@
 
                 <div class="form-group">
                     <label for="cantidad">Cantidad (piezas):</label>
-                    <input type="number" id="cantidad" name="cantidad" class="form-control" required>  <!-- Nuevo campo agregado -->
+                    <input type="number" id="cantidad" name="cantidad" class="form-control" required>  
                 </div>
 
                 <div class="form-group">
@@ -123,7 +123,7 @@
         </section>
 
         <section id="buscar" class="mt-5">
-            <h2>Buscar Cotización</h2>
+            <h2 style="color: black;">Buscar Cotización</h2>
             <form action="/buscar" method="POST">
                 <div class="form-group">
                     <label for="criterio">Criterio de Búsqueda:</label>
@@ -143,7 +143,7 @@
         </section>
 
         <section id="listado" class="mt-5">
-            <h2>Listado de Cotizaciones</h2>
+            <h2 style="color: black;">Listado de Cotizaciones</h2>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead class="thead-dark">
@@ -157,19 +157,19 @@
                             <th>Actualización</th>
                             <th>Nombre del Usuario</th>
                             <th>Mensaje David</th>
-                            <th>Acción</th>
+                            <th style="width: 150px;">Acción</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for cotizacion in cotizaciones %}
                         <tr>
                             <td>{{ cotizacion.id }}</td> <!-- Folio -->
-        <td>{{ cotizacion.fecha }}</td> <!-- Fecha -->
-        <td>{{ cotizacion.componente }}</td> <!-- Componente -->
-        <td>{{ cotizacion.codigo }}</td> <!-- Código -->
-        <td>{{ cotizacion.cotizacion }}</td> <!-- Número de Parte -->
-        <td>{{ cotizacion.cantidad }}</td> <!-- Cantidad de piezas -->
-        
+                            <td>{{ cotizacion.fecha }}</td> <!-- Fecha -->
+                            <td>{{ cotizacion.componente }}</td> <!-- Componente -->
+                            <td>{{ cotizacion.codigo }}</td> <!-- Código -->
+                            <td>{{ cotizacion.cotizacion }}</td> <!-- Número de Parte -->
+                            <td>{{ cotizacion.cantidad }}</td> <!-- Cantidad de piezas -->
+                            
                             <td class="recordatorio">
                                 {% if cotizacion.cancelado %}
                                     <span style="color: red;">Cancelado</span>
@@ -182,18 +182,21 @@
                             <td>{{ cotizacion.numero_serie }}</td>
                             <td>{{ cotizacion.mensaje_david or 'Sin mensaje' }}</td>
                             <td>
-                                {% if cotizacion.respondido and not cotizacion.cancelado %}
-                                    <form action="/cancelar/{{ cotizacion.id }}" method="POST">
-                                        <button type="submit" class="btn btn-danger">Cancelar</button>
-                                    </form>
-                                {% elif cotizacion.cancelado %}
-                                    <span style="color: red;">Cancelado</span>
-                                {% endif %}
+                                <!-- Botones de acción -->
+                                <div class="action-buttons">
+                                    {% if not cotizacion.cancelado %}
+                                        {% if not cotizacion.respondido %}
+                                            <button onclick="openModal('responder/{{ cotizacion.id }}')" class="btn btn-success">Marcar como Respondida</button>
+                                            <button onclick="openModal('eliminar/{{ cotizacion.id }}')" class="btn btn-danger">Eliminar</button>
+                                        {% elif cotizacion.respondido %}
+                                            <button onclick="openModal('cancelar/{{ cotizacion.id }}')" class="btn btn-warning">Cancelar</button>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
-                    </tbody>
-                </table>
+                    </tbody>                    
             </div>
         </section>
     </div>
