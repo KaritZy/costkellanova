@@ -1,20 +1,21 @@
 :root {
-    --primary-color: #004080; /* Azul oscuro para fondo de la página */
+    --primary-color: #004080; /* Azul oscuro para fondo del menú */
     --secondary-color: #0056b3; /* Azul medio para botones */
     --text-color: #ffffff; /* Texto blanco */
-    --bg-color: #e6f2ff; /* Azul claro para contenedores y inputs */
-    --input-bg-color: #cce6ff; /* Azul aún más claro para inputs */
-    --menu-bg-color: #003366; /* Azul para la barra lateral */
+    --bg-color: #f5deb3; /* Fondo beige claro para los formularios */
+    --input-bg-color: #ffffff; /* Fondo blanco para los inputs */
+    --menu-bg-color: #2b2b2b; /* Menú oscuro */
     --hover-color: #336699; /* Color para hover en elementos interactivos */
     --table-text-color: #000000; /* Negro para texto de la tabla */
     --danger-color: red; /* Rojo para botones de eliminar */
     --success-color: green; /* Verde para botones de buscar */
+    --gradient-bg-color: linear-gradient(90deg, rgba(255,223,138,1) 0%, rgba(255,167,81,1) 100%); /* Degradado amarillo a naranja */
 }
 
 /* Estilo general del cuerpo */
 body {
     font-family: Arial, sans-serif;
-    background-color: var(--primary-color);
+    background: var(--gradient-bg-color); /* Degradado */
     color: var(--text-color);
     display: flex;
     flex-direction: column;
@@ -27,7 +28,7 @@ body {
 
 /* Contenedor principal */
 .container {
-    background-color: #87CEEB; /* Azul Cielo */
+    background-color: var(--bg-color); /* Beige claro */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -41,24 +42,23 @@ body {
 .menu-bar {
     background-color: var(--menu-bg-color);
     padding: 10px;
-    width: 20%;
-    height: 100vh;
+    width: 100%;
+    height: 60px;
     display: flex;
-    flex-direction: column;
+    justify-content: space-around;
     align-items: center;
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 100;
 }
 
 .menu-bar a {
-    color: #87CEEB;
-    margin: 15px 0;
+    color: var(--text-color); /* Texto blanco */
+    margin: 0 15px;
     text-decoration: none;
     font-weight: bold;
     padding: 10px;
-    width: 100%;
-    text-align: center;
     transition: background 0.3s;
 }
 
@@ -69,11 +69,9 @@ body {
 
 /* Contenido Principal */
 .content {
-    margin-left: 22%;
-    width: 75%;
+    margin-top: 80px;
     padding: 20px;
-    box-sizing: border-box;
-    background-color: var(--bg-color);
+    background-color: var(--bg-color); /* Fondo beige claro */
     border-radius: 15px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     overflow-y: auto;
@@ -92,9 +90,9 @@ form input, form select {
     padding: 10px;
     margin: 5px 0 10px;
     border-radius: 5px;
-    border: 1px solid var(--primary-color);
-    background-color: var(--input-bg-color);
-    color: var(--primary-color);
+    border: 1px solid #ccc;
+    background-color: var(--input-bg-color); /* Blanco */
+    color: #333; /* Texto negro */
 }
 
 /* Botones generales */
@@ -195,19 +193,21 @@ table td {
 /* Media Queries para Ajustes Responsivos */
 @media (max-width: 768px) {
     .menu-bar {
-        width: 30%;
+        height: auto;
+        flex-direction: column;
+        padding: 10px;
     }
 
     .content {
-        margin-left: 32%;
-        width: 65%;
+        width: 100%;
+        margin-left: 0;
     }
 
     input[type="text"],
     input[type="date"],
     input[type="password"],
     select {
-        width: 90%;
+        width: 100%;
     }
 }
 
@@ -217,13 +217,12 @@ table td {
         height: auto;
         flex-direction: row;
         justify-content: space-around;
-        position: relative;
     }
 
     .content {
-        margin-left: 0;
+        margin-top: 100px;
         width: 100%;
-        margin-top: 20px;
+        margin-left: 0;
     }
 
     input[type="text"],
