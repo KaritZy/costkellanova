@@ -218,6 +218,17 @@ def eliminar_cotizacion(folio):
 
     return redirect(url_for('index'))
 
+@app.route('/cancelar/<int:folio>', methods=['POST'])
+def cancelar_cotizacion(folio):
+    cotizacion = Cotizacion.query.get(folio)
+    if cotizacion and cotizacion.respondido:
+        cotizacion.respondido = False  # Cambiar el estado de cotizado a pendiente
+        db.session.commit()
+        flash(f'Cotización con folio {folio} ha sido cancelada.')
+    else:
+        flash('Cotización no encontrada o no está en estado cotizado.')
+    return redirect(url_for('index'))
+
 @app.route('/mostrar_equipos')
 def mostrar_equipos():
     equipos = Equipo.query.all()
