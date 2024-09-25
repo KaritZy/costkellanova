@@ -51,6 +51,7 @@ body {
     top: 0;
     left: 0;
     z-index: 100;
+    overflow-x: auto; /* Permitir desplazamiento horizontal en dispositivos pequeños */
 }
 
 .menu-bar a {
@@ -196,6 +197,7 @@ table td {
         height: auto;
         flex-direction: column;
         padding: 10px;
+        overflow-x: scroll; /* Scroll horizontal */
     }
 
     .content {
