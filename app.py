@@ -114,7 +114,6 @@ def agregar_cotizacion():
     flash('Cotización registrada exitosamente.')
     return redirect(url_for('index'))
 
-
 @app.route('/buscar', methods=['POST'])
 def buscar_cotizacion():
     criterio = request.form['criterio']
@@ -275,15 +274,11 @@ def componentes():
 
 @app.route('/papelera', methods=['GET', 'POST'])
 def ver_papelera():
-    admin_name = request.form.get('admin_name')
-    admin_password = request.form.get('admin_password')
-
-    if admin_name == 'Ricardo' and admin_password == 'PaolA2001@$':
+    if 'papelera_authenticated' in session:
         cotizaciones_eliminadas = Papelera.query.all()
         return render_template('papelera.html', cotizaciones=cotizaciones_eliminadas)
     else:
-        flash('Nombre de administrador o contraseña incorrectos.')
-        return redirect(url_for('index'))
+        return redirect(url_for('login_papelera'))
 
 @app.route('/restaurar_cotizacion/<int:id>', methods=['POST'])
 def restaurar_cotizacion(id):
@@ -317,6 +312,20 @@ def eliminar_definitivo(id):
     else:
         flash('Cotización no encontrada en la papelera.')
     return redirect(url_for('ver_papelera'))
+
+@app.route('/login_papelera', methods=['GET', 'POST'])
+def login_papelera():
+    if request.method == 'POST':
+        admin_name = request.form.get('admin_name')
+        admin_password = request.form.get('admin_password')
+
+        if admin_name == 'Ricardo' and admin_password == 'PaolA2001@$':
+            session['papelera_authenticated'] = True
+            return redirect(url_for('ver_papelera'))
+        else:
+            flash('Nombre de administrador o contraseña incorrectos.')
+
+    return render_template('login_papelera.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

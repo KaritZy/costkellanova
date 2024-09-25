@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso a Papelera</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Acceso a Papelera de Cotizaciones</h2>
+        <form action="{{ url_for('ver_papelera') }}" method="POST">
+            <label for="admin_name">Nombre de Administrador:</label>
+            <input type="text" id="admin_name" name="admin_name" required>
+            <label for="admin_password">Contraseña:</label>
+            <input type="password" id="admin_password" name="admin_password" required>
+            <button type="submit" class="btn btn-primary">Ingresar</button>
+        </form>
+        <!-- Mostrar mensajes flash -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>
