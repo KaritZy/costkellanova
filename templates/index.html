@@ -163,18 +163,23 @@
                             <td>{{ cotizacion.codigo }}</td>
                             <td>{{ cotizacion.cotizacion }}</td>
                             <td class="recordatorio">
-                                {% if cotizacion.respondido %}
-                                <span style="color: green;">Cotizado</span>
+                                {% if cotizacion.cancelado %}
+                                    <span style="color: red;">Cancelado</span>
+                                {% elif cotizacion.respondido %}
+                                    <span style="color: green;">Cotizado</span>
                                 {% else %}
-                                <span style="color: red;">Pendiente</span>
+                                    <span style="color: red;">Pendiente</span>
                                 {% endif %}
                             </td>
                             <td>{{ cotizacion.numero_serie }}</td>
                             <td>{{ cotizacion.mensaje_david or 'Sin mensaje' }}</td>
                             <td>
-                                {% if not cotizacion.respondido %}
-                                <button onclick="openModal('responder/{{ cotizacion.id }}')" class="btn btn-success">Marcar como Respondida</button>
-                                <button onclick="openModal('eliminar/{{ cotizacion.id }}')" class="btn btn-danger">Eliminar</button>
+                                {% if cotizacion.respondido and not cotizacion.cancelado %}
+                                    <form action="/cancelar/{{ cotizacion.id }}" method="POST">
+                                        <button type="submit" class="btn btn-danger">Cancelar</button>
+                                    </form>
+                                {% elif cotizacion.cancelado %}
+                                    <span style="color: red;">Cancelado</span>
                                 {% endif %}
                             </td>
                         </tr>

@@ -30,6 +30,7 @@ class Cotizacion(db.Model):
     cotizacion = db.Column(db.String(100), nullable=False)
     recordatorio = db.Column(db.String(20), default='Pendiente')
     respondido = db.Column(db.Boolean, default=False)
+    cancelado = db.Column(db.Boolean, default=False)  # Campo para cancelar
     numero_serie = db.Column(db.String(50), nullable=False)
     mostrar_recordatorio = db.Column(db.Boolean, default=False)
     mensaje_david = db.Column(db.String(255), nullable=True)
@@ -186,6 +187,18 @@ def responder_cotizacion(folio):
     else:
         flash('Nombre de administrador o contraseña incorrectos.')
 
+    return redirect(url_for('index'))
+
+# Nueva ruta para cancelar la cotización
+@app.route('/cancelar/<int:folio>', methods=['POST'])
+def cancelar_cotizacion(folio):
+    cotizacion = Cotizacion.query.get(folio)
+    if cotizacion:
+        cotizacion.cancelado = True
+        db.session.commit()
+        flash(f'Cotización con folio {folio} ha sido cancelada.')
+    else:
+        flash('Cotización no encontrada.')
     return redirect(url_for('index'))
 
 @app.route('/eliminar/<int:folio>', methods=['POST'])
