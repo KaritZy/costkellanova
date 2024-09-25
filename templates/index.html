@@ -153,7 +153,7 @@
                             <th>Componente</th>
                             <th>Código</th>
                             <th>N.º de Parte</th>
-                            <th>Cantidad (piezas)</th>  <!-- Nueva columna -->
+                            <th>Cantidad (piezas)</th>
                             <th>Actualización</th>
                             <th>Nombre del Usuario</th>
                             <th>Mensaje David</th>
@@ -168,6 +168,11 @@
                             <td>{{ cotizacion.componente }}</td>
                             <td>{{ cotizacion.codigo }}</td>
                             <td>{{ cotizacion.cotizacion }}</td>
+                            <td>{{ cotizacion.cantidad }}</td>  <!-- Cantidad debe aparecer correctamente aquí -->
+                            <td>{{ cotizacion.actualizacion }}</td>  <!-- Actualización en su columna -->
+                            <td>{{ cotizacion.numero_serie }}</td>  <!-- Nombre del Usuario en su columna -->
+                            <td>{{ cotizacion.mensaje_david or 'Sin mensaje' }}</td>
+
                             <td class="recordatorio">
                                 {% if cotizacion.cancelado %}
                                     <span style="color: red;">Cancelado</span>
