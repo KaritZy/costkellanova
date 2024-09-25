@@ -163,16 +163,13 @@
                     <tbody>
                         {% for cotizacion in cotizaciones %}
                         <tr>
-                            <td>{{ cotizacion.id }}</td>
-                            <td>{{ cotizacion.fecha }}</td>
-                            <td>{{ cotizacion.componente }}</td>
-                            <td>{{ cotizacion.codigo }}</td>
-                            <td>{{ cotizacion.cotizacion }}</td>
-                            <td>{{ cotizacion.cantidad }}</td>  <!-- Cantidad debe aparecer correctamente aquí -->
-                            <td>{{ cotizacion.actualizacion }}</td>  <!-- Actualización en su columna -->
-                            <td>{{ cotizacion.numero_serie }}</td>  <!-- Nombre del Usuario en su columna -->
-                            <td>{{ cotizacion.mensaje_david or 'Sin mensaje' }}</td>
-
+                            <td>{{ cotizacion.id }}</td> <!-- Folio -->
+        <td>{{ cotizacion.fecha }}</td> <!-- Fecha -->
+        <td>{{ cotizacion.componente }}</td> <!-- Componente -->
+        <td>{{ cotizacion.codigo }}</td> <!-- Código -->
+        <td>{{ cotizacion.cotizacion }}</td> <!-- Número de Parte -->
+        <td>{{ cotizacion.cantidad }}</td> <!-- Cantidad de piezas -->
+        
                             <td class="recordatorio">
                                 {% if cotizacion.cancelado %}
                                     <span style="color: red;">Cancelado</span>
