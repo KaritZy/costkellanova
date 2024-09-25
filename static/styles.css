@@ -267,3 +267,6 @@ table td {
 .titulo-negro {
     color: black;
 }
+.menu-bar {
+    overflow-x: auto; /* Permitir desplazamiento horizontal */
+}
