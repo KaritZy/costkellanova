@@ -65,6 +65,20 @@
                 <button type="submit" class="btn btn-primary">Confirmar</button>
             </form>
         </div>
-    </div>    
+    </div> 
+    <!-- Aquí colocas el JavaScript al final del archivo, antes de la etiqueta de cierre del cuerpo -->
+<script>
+    var currentAction;
+
+    function openModal(action) {
+        currentAction = action;
+        document.getElementById('authModal').style.display = 'block';
+        document.getElementById('adminForm').action = '/' + action;
+    }
+
+    function closeModal() {
+        document.getElementById('authModal').style.display = 'none';
+    }
+</script>   
 </body>
 </html>
