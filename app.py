@@ -21,7 +21,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
-
+    
 class Cotizacion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fecha = db.Column(db.String(10), nullable=False)
@@ -30,6 +30,7 @@ class Cotizacion(db.Model):
     cotizacion = db.Column(db.String(100), nullable=False)
     recordatorio = db.Column(db.String(20), default='Pendiente')
     respondido = db.Column(db.Boolean, default=False)
+    cancelado = db.Column(db.Boolean, default=False)  # Nuevo campo para cancelado
     numero_serie = db.Column(db.String(50), nullable=False)
     mostrar_recordatorio = db.Column(db.Boolean, default=False)
     mensaje_david = db.Column(db.String(255), nullable=True)
@@ -222,7 +223,8 @@ def eliminar_cotizacion(folio):
 def cancelar_cotizacion(folio):
     cotizacion = Cotizacion.query.get(folio)
     if cotizacion and cotizacion.respondido:
-        cotizacion.respondido = False  # Cambiar el estado de cotizado a pendiente
+        cotizacion.respondido = False  # Desmarcar como respondido
+        cotizacion.cancelado = True  # Marcar como cancelado
         db.session.commit()
         flash(f'Cotización con folio {folio} ha sido cancelada.')
     else:
