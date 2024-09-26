@@ -292,3 +292,47 @@ table td {
     border-radius: 10px;
     text-align: center;
 }
+/* Asegurar que el contenido de la tabla sea accesible en dispositivos móviles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+@media screen and (max-width: 768px) {
+    /* Hacer que las tablas se desplacen horizontalmente en pantallas pequeñas */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* Ajustar el tamaño del botón */
+    button {
+        width: 100%;
+    }
+
+    /* Hacer que los formularios y botones sean fáciles de tocar */
+    form {
+        display: block;
+        margin-bottom: 10px;
+    }
+    
+    /* Estilo para el contenedor general */
+    .container {
+        padding: 10px;
+        margin: 0 auto;
+    }
+
+    /* Optimización para el modal en dispositivos móviles */
+    .modal-content {
+        width: 90%;
+        max-width: 400px;
+    }
+}
