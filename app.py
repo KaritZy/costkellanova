@@ -6,7 +6,14 @@ from datetime import timedelta
 from flask_session import Session  # Agregar para manejo de sesiones con filesystem si es necesario
 
 app = Flask(__name__)
-app.secret_key = 'tu_clave_secreta_aqui'
+# Clave secreta para las sesiones
+app.secret_key = 'tu_clave_secreta'
+
+# Configurar Flask-Session para usar el sistema de archivos (u otro método como Redis o Memcached)
+app.config['SESSION_TYPE'] = 'filesystem'
+
+# Inicializar la extensión de sesión
+Session(app)
 
 # Configuración para manejar sesiones de forma persistente en filesystem (opcional)
 app.config['SESSION_TYPE'] = 'filesystem'  # Agregado para almacenar sesiones en el sistema de archivos
