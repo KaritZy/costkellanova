@@ -3,9 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
+from flask_session import Session  # Agregar para manejo de sesiones con filesystem si es necesario
 
 app = Flask(__name__)
 app.secret_key = 'tu_clave_secreta_aqui'
+
+# Configuración para manejar sesiones de forma persistente en filesystem (opcional)
+app.config['SESSION_TYPE'] = 'filesystem'  # Agregado para almacenar sesiones en el sistema de archivos
+Session(app)
 
 # Configurar la URL de la base de datos con Railway con SSL
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:XGkABujfcUSOfTvxliOmOZcoQKpsjfft@autorack.proxy.rlwy.net:44589/railway?sslmode=require'
@@ -272,14 +277,15 @@ def agregar_componente():
 def componentes():
     return render_template('componentes.html')
 
-@app.route('/papelera', methods=['GET', 'POST'])
+@app.route('/papelera', methods=['GET'])
 def ver_papelera():
-    if 'papelera_authenticated' in session:
-        cotizaciones_eliminadas = Papelera.query.all()
-        return render_template('papelera.html', cotizaciones=cotizaciones_eliminadas)
-    else:
-        return redirect(url_for('login_papelera'))
-
+    # if session.get('authenticated_papelera'):  # Comentamos esta línea para desactivar la autenticación
+    cotizaciones_eliminadas = Papelera.query.all()  # Acceso directo sin autenticación
+    return render_template('papelera.html', cotizaciones=cotizaciones_eliminadas)
+    # else:
+    #     flash("Se requiere autenticación para acceder a la papelera.")
+    #     return redirect(url_for('login_papelera'))
+    
 @app.route('/restaurar_cotizacion/<int:id>', methods=['POST'])
 def restaurar_cotizacion(id):
     cotizacion = Papelera.query.get(id)
@@ -313,18 +319,24 @@ def eliminar_definitivo(id):
         flash('Cotización no encontrada en la papelera.')
     return redirect(url_for('ver_papelera'))
 
+# Ruta para el login de la papelera
 @app.route('/login_papelera', methods=['GET', 'POST'])
 def login_papelera():
     if request.method == 'POST':
         admin_name = request.form.get('admin_name')
         admin_password = request.form.get('admin_password')
 
+        # Verificar credenciales
         if admin_name == 'Ricardo' and admin_password == 'PaolA2001@$':
-            session['papelera_authenticated'] = True
-            return redirect(url_for('ver_papelera'))
+            # Crear una cookie que guarde la autenticación
+            resp = make_response(redirect(url_for('ver_papelera')))
+            resp.set_cookie('admin_papelera_authenticated', 'true', max_age=60*60)  # Duración de 1 hora
+            print("Cookie de autenticación creada.")
+            return resp
         else:
             flash('Nombre de administrador o contraseña incorrectos.')
-
+            print("Error en la autenticación.")
+    
     return render_template('login_papelera.html')
 
 if __name__ == '__main__':
