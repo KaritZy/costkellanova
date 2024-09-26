@@ -9,14 +9,16 @@
 <body>
     <div class="container">
         <h2>Acceso a Papelera de Cotizaciones</h2>
-        <form action="{{ url_for('ver_papelera') }}" method="POST">
+        <!-- El formulario debe apuntar a la ruta de autenticación -->
+        <form action="{{ url_for('login_papelera') }}" method="POST">
             <label for="admin_name">Nombre de Administrador:</label>
             <input type="text" id="admin_name" name="admin_name" required>
             <label for="admin_password">Contraseña:</label>
             <input type="password" id="admin_password" name="admin_password" required>
             <button type="submit" class="btn btn-primary">Ingresar</button>
         </form>
-        <!-- Mostrar mensajes flash -->
+
+        <!-- Mostrar mensajes flash de autenticación -->
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="flash-messages">

@@ -32,9 +32,12 @@
                 <td>{{ cotizacion.recordatorio }}</td>
                 <td>{{ cotizacion.numero_serie }}</td>
                 <td>
+                    <!-- Formulario para restaurar cotización -->
                     <form action="{{ url_for('restaurar_cotizacion', id=cotizacion.id) }}" method="POST">
                         <button type="submit" class="btn-green">Restaurar</button>
                     </form>
+
+                    <!-- Formulario para eliminar cotización -->
                     <form action="{{ url_for('eliminar_definitivo', id=cotizacion.id) }}" method="POST">
                         <button type="submit" class="btn btn-red">Eliminar Definitivamente</button>
                     </form>
@@ -43,6 +46,7 @@
             {% endfor %}
         </tbody>
     </table>
+
     <script>
         function openModal(action) {
             document.getElementById('authModal').style.display = 'block';
@@ -60,25 +64,31 @@
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Autenticación de Administrador</h2>
             <form id="adminForm" method="POST">
+                <!-- En caso de que utilices Flask-WTF para la protección CSRF -->
+                {% if csrf_token %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                {% endif %}
+                
                 <input type="text" name="admin_name" placeholder="Nombre de Administrador" required>
                 <input type="password" name="admin_password" placeholder="Contraseña" required>
                 <button type="submit" class="btn btn-primary">Confirmar</button>
             </form>
         </div>
     </div> 
-    <!-- Aquí colocas el JavaScript al final del archivo, antes de la etiqueta de cierre del cuerpo -->
-<script>
-    var currentAction;
 
-    function openModal(action) {
-        currentAction = action;
-        document.getElementById('authModal').style.display = 'block';
-        document.getElementById('adminForm').action = '/' + action;
-    }
+    <!-- JavaScript al final del archivo -->
+    <script>
+        var currentAction;
 
-    function closeModal() {
-        document.getElementById('authModal').style.display = 'none';
-    }
-</script>   
+        function openModal(action) {
+            currentAction = action;
+            document.getElementById('authModal').style.display = 'block';
+            document.getElementById('adminForm').action = '/' + action;
+        }
+
+        function closeModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+    </script>   
 </body>
 </html>

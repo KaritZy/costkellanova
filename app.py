@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
@@ -33,7 +33,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
-    
+
 class Cotizacion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fecha = db.Column(db.String(10), nullable=False)
@@ -120,7 +120,6 @@ def agregar_cotizacion():
         cantidad=cantidad,  # Guardar el valor de cantidad
         numero_serie=numero_serie
     )
-
     db.session.add(nueva_cotizacion)
     db.session.commit()
     flash('Cotización registrada exitosamente.')
