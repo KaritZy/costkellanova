@@ -20,7 +20,7 @@ app.config['SESSION_TYPE'] = 'filesystem'  # Agregado para almacenar sesiones en
 Session(app)
 
 # Configurar la URL de la base de datos con Railway con SSL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:XGkABujfcUSOfTvxliOmOZcoQKpsjfft@autorack.proxy.rlwy.net:44589/railway?sslmode=require'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:KvhCpEixJkXBwitQjowBcCbbQjbJqKJS@junction.proxy.rlwy.net:52243/railway?sslmode=require'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.permanent_session_lifetime = timedelta(hours=1)
 
