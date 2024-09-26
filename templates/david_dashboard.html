@@ -29,6 +29,7 @@
                 <th>Componente</th>
                 <th>Código</th>
                 <th>N.º de Parte</th>
+                <th>Cantidad (piezas)</th> <!-- Añadir esta columna -->
                 <th>Actualización</th>
                 <th>Nombre del Usuario</th>
                 <th>Mensaje</th>
@@ -43,14 +44,17 @@
                 <td>{{ cotizacion.componente }}</td>
                 <td>{{ cotizacion.codigo }}</td>
                 <td>{{ cotizacion.cotizacion }}</td>
+                <td>{{ cotizacion.cantidad }}</td> <!-- Mostrar la cantidad -->
                 <td>{% if cotizacion.respondido %}Cotizado{% else %}Pendiente{% endif %}</td>
                 <td>{{ cotizacion.numero_serie }}</td>
                 <td>{{ cotizacion.mensaje_david or '' }}</td>
                 <td>
-                    <form action="{{ url_for('enviar_mensaje_david', folio=cotizacion.id) }}" method="POST">
-                        <input type="text" name="mensaje" placeholder="Escribe un mensaje" required>
-                        <button type="submit">Enviar</button>
-                    </form>
+                    <div class="form-container">
+                        <form action="{{ url_for('enviar_mensaje_david', folio=cotizacion.id) }}" method="POST" class="form-centered">
+                            <input type="text" class="input-centered" name="mensaje" placeholder="Escribe un mensaje" required>
+                            <button type="submit">Enviar</button>
+                        </form>                        
+                    </div>
                 </td>
             </tr>
             {% endfor %}

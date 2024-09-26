@@ -336,3 +336,33 @@ th, td {
         max-width: 400px;
     }
 }
+/* Asegura que el formulario esté centrado */
+.form-centered {
+    display: flex;
+    flex-direction: column; /* Hace que los elementos estén en una columna */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Centrar el input */
+.input-centered {
+    width: 100%;
+    max-width: 250px; /* Controla el ancho máximo del cuadro de texto */
+    text-align: center; /* Centra el texto dentro del input */
+    margin-bottom: 10px; /* Añade un pequeño espacio entre el input y el botón */
+}
+
+/* Botón de envío */
+.form-centered button {
+    width: 100%;
+    max-width: 150px; /* Ajusta el ancho máximo del botón */
+    padding: 10px;
+    background-color: #1406da;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.form-centered button:hover {
+    background-color: #45a049;
+}

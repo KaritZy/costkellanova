@@ -54,6 +54,7 @@ class Papelera(db.Model):
     componente = db.Column(db.String(100), nullable=False)
     codigo = db.Column(db.String(50), nullable=False)
     cotizacion = db.Column(db.String(100), nullable=False)
+    cantidad = db.Column(db.Integer, nullable=False, default=1)  # Agrega un valor por defecto
     recordatorio = db.Column(db.String(20), default='Pendiente')
     respondido = db.Column(db.Boolean, default=False)
     numero_serie = db.Column(db.String(50), nullable=False)
@@ -216,6 +217,7 @@ def eliminar_cotizacion(folio):
                 componente=cotizacion.componente,
                 codigo=cotizacion.codigo,
                 cotizacion=cotizacion.cotizacion,
+                cantidad=cotizacion.cantidad,  # Mover la cantidad a la papelera
                 recordatorio=cotizacion.recordatorio,
                 respondido=cotizacion.respondido,
                 numero_serie=cotizacion.numero_serie,
@@ -301,6 +303,7 @@ def restaurar_cotizacion(id):
             componente=cotizacion.componente,
             codigo=cotizacion.codigo,
             cotizacion=cotizacion.cotizacion,
+            cantidad=cotizacion.cantidad,  # Asegurarte de restaurar la cantidad
             recordatorio=cotizacion.recordatorio,
             respondido=cotizacion.respondido,
             numero_serie=cotizacion.numero_serie,
