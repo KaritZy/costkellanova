@@ -336,3 +336,22 @@ th, td {
         max-width: 400px;
     }
 }
+.form-container {
+    display: flex;
+    flex-direction: column; /* Asegura que el formulario y el botón estén en columna */
+    justify-content: center; /* Centrar verticalmente */
+    align-items: center; /* Centrar horizontalmente */
+    height: 100vh; /* Ajusta el tamaño para que ocupe toda la altura disponible */
+}
+
+form {
+    display: flex;
+    flex-direction: column; /* Los elementos dentro del formulario estarán en columna */
+    width: 100%; /* Ajusta el ancho del formulario */
+    max-width: 400px; /* Tamaño máximo del formulario */
+}
+
+button {
+    margin-top: 10px; /* Espacio entre el botón y el campo de entrada */
+    align-self: center; /* Centrar el botón */
+}
