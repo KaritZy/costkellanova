@@ -40,7 +40,11 @@ class Cotizacion(db.Model):
     componente = db.Column(db.String(100), nullable=False)
     codigo = db.Column(db.String(50), nullable=True)
     cotizacion = db.Column(db.String(100), nullable=False)
-    cantidad = db.Column(db.Integer, nullable=False)  # Nuevo campo para cantidad
+    cantidad = db.Column(db.String, nullable=False)  # Nuevo campo para cantidad
+    area_equipo = db.Column(db.String(100), nullable=True)  # Campo para área de equipo
+    solicitante_nombre = db.Column(db.String(100), nullable=True)  # Nombre del solicitante
+    solicitante_numero = db.Column(db.String(50), nullable=True)  # Número del solicitante
+    solicitante_correo = db.Column(db.String(100), nullable=True)  # Correo del solicitante
     recordatorio = db.Column(db.String(20), default='Pendiente')
     respondido = db.Column(db.Boolean, default=False)
     cancelado = db.Column(db.Boolean, default=False)
@@ -54,7 +58,8 @@ class Papelera(db.Model):
     componente = db.Column(db.String(100), nullable=False)
     codigo = db.Column(db.String(50), nullable=False)
     cotizacion = db.Column(db.String(100), nullable=False)
-    cantidad = db.Column(db.Integer, nullable=False, default=1)  # Agrega un valor por defecto
+    cantidad = db.Column(db.String, nullable=False, default=1)  # Agrega un valor por defecto
+    area_equipo = db.Column(db.String(100), nullable=True)  # Agregar campo Área de equipo
     recordatorio = db.Column(db.String(20), default='Pendiente')
     respondido = db.Column(db.Boolean, default=False)
     numero_serie = db.Column(db.String(50), nullable=False)
@@ -110,16 +115,24 @@ def agregar_cotizacion():
     componente = request.form['componente']
     codigo = request.form['codigo']
     cotizacion = request.form['cotizacion']
-    cantidad = request.form['cantidad']  # Capturar el nuevo campo
+    cantidad = request.form['cantidad']
     numero_serie = request.form['numero_serie']
+    solicitante_nombre = request.form['solicitante_nombre']
+    solicitante_numero = request.form['solicitante_numero']
+    solicitante_correo = request.form['solicitante_correo']
+    area_equipo = request.form['area_equipo']
 
     nueva_cotizacion = Cotizacion(
         fecha=fecha,
         componente=componente,
         codigo=codigo,
         cotizacion=cotizacion,
-        cantidad=cantidad,  # Guardar el valor de cantidad
-        numero_serie=numero_serie
+        cantidad=cantidad,
+        numero_serie=numero_serie,
+        solicitante_nombre=solicitante_nombre,
+        solicitante_numero=solicitante_numero,
+        solicitante_correo=solicitante_correo,
+        area_equipo=area_equipo
     )
     db.session.add(nueva_cotizacion)
     db.session.commit()
@@ -234,6 +247,45 @@ def eliminar_cotizacion(folio):
         flash('Nombre de administrador o contraseña incorrectos.')
 
     return redirect(url_for('index'))
+
+@app.route('/editar/<int:id>', methods=['GET', 'POST'])
+def editar_cotizacion(id):
+    # Buscar la cotización por ID
+    cotizacion = Cotizacion.query.get_or_404(id)
+
+    if request.method == 'POST':
+        # Autenticación
+        admin_name = request.form.get('admin_name')
+        admin_password = request.form.get('admin_password')
+
+        if admin_name == 'Ricardo' and admin_password == 'PaolA2001@$':  
+            # Recibir datos del formulario
+            cotizacion.fecha = request.form.get('fecha')
+            cotizacion.componente = request.form.get('componente')
+            cotizacion.codigo = request.form.get('codigo')
+            cotizacion.cotizacion = request.form.get('cotizacion')
+            cotizacion.cantidad = request.form.get('cantidad')
+            cotizacion.area_equipo = request.form.get('area_equipo')
+            cotizacion.numero_serie = request.form.get('numero_serie')
+            cotizacion.solicitante_nombre = request.form.get('solicitante_nombre')
+            cotizacion.solicitante_numero = request.form.get('solicitante_numero')
+            cotizacion.solicitante_correo = request.form.get('solicitante_correo')
+
+            try:
+                # Guardar cambios en la base de datos
+                db.session.commit()
+                flash('Cotización actualizada con éxito')
+                return redirect(url_for('index'))  # Redirigir al listado de cotizaciones
+            except Exception as e:
+                db.session.rollback()
+                flash(f'Error al actualizar la cotización: {str(e)}')
+                return redirect(url_for('editar_cotizacion', id=cotizacion.id))
+        else:
+            flash('Credenciales incorrectas.')
+            return redirect(url_for('editar_cotizacion', id=cotizacion.id))
+
+    # Si es un GET, mostrar el formulario
+    return render_template('editar_cotizacion.html', cotizacion=cotizacion)
 
 @app.route('/cancelar/<int:folio>', methods=['POST'])
 def cancelar_cotizacion(folio):

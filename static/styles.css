@@ -366,3 +366,8 @@ th, td {
 .form-centered button:hover {
     background-color: #45a049;
 }
+/* Habilitar el desplazamiento horizontal en toda la tabla */
+.table-responsive {
+    overflow-x: auto;    /* Permitir desplazamiento horizontal */
+    width: 100%;         /* Asegurar que el contenedor de la tabla ocupe todo el ancho disponible */
+}

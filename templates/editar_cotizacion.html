@@ -1,0 +1,64 @@
+<form action="{{ url_for('editar_cotizacion', id=cotizacion.id) }}" method="POST">
+    <div class="form-group">
+        <label for="fecha">Fecha:</label>
+        <input type="date" id="fecha" name="fecha" class="form-control" value="{{ cotizacion.fecha }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="componente">Componente:</label>
+        <input type="text" id="componente" name="componente" class="form-control" value="{{ cotizacion.componente }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="codigo">Código:</label>
+        <input type="text" id="codigo" name="codigo" class="form-control" value="{{ cotizacion.codigo }}">
+    </div>
+
+    <div class="form-group">
+        <label for="cotizacion">N.º de Parte:</label>
+        <input type="text" id="cotizacion" name="cotizacion" class="form-control" value="{{ cotizacion.cotizacion }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="cantidad">Cantidad (piezas):</label>
+        <input type="text" id="cantidad" name="cantidad" class="form-control" value="{{ cotizacion.cantidad }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="area_equipo">Área de equipo:</label>
+        <input type="text" id="area_equipo" name="area_equipo" class="form-control" value="{{ cotizacion.area_equipo }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="numero_serie">Nombre de Usuario:</label>
+        <input type="text" id="numero_serie" name="numero_serie" class="form-control" value="{{ cotizacion.numero_serie }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="solicitante_nombre">Nombre del Solicitante:</label>
+        <input type="text" id="solicitante_nombre" name="solicitante_nombre" class="form-control" value="{{ cotizacion.solicitante_nombre }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="solicitante_numero">Número del Solicitante:</label>
+        <input type="text" id="solicitante_numero" name="solicitante_numero" class="form-control" value="{{ cotizacion.solicitante_numero }}">
+    </div>
+
+    <div class="form-group">
+        <label for="solicitante_correo">Correo del Solicitante:</label>
+        <input type="email" id="solicitante_correo" name="solicitante_correo" class="form-control" value="{{ cotizacion.solicitante_correo }}">
+    </div>
+
+    <!-- Autenticación -->
+    <div class="form-group">
+        <label for="admin_name">Nombre de Administrador:</label>
+        <input type="text" id="admin_name" name="admin_name" class="form-control" placeholder="Nombre de Administrador" required>
+    </div>
+
+    <div class="form-group">
+        <label for="admin_password">Contraseña de Administrador:</label>
+        <input type="password" id="admin_password" name="admin_password" class="form-control" placeholder="Contraseña de Administrador" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Actualizar Cotización</button>
+</form>

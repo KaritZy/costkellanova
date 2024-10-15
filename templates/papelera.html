@@ -17,8 +17,10 @@
                 <th>Código</th>
                 <th>N.º de Parte</th>
                 <th>Cantidad (piezas)</th> <!-- Añadir esta columna -->
+                <th>Área de equipo</th>
                 <th>Actualización</th>
                 <th>Nombre del Usuario</th>
+                <th>Solicitante</th> <!-- Nueva columna "Solicitante" -->
                 <th>Acción</th>
             </tr>
         </thead>
@@ -31,8 +33,10 @@
                 <td>{{ cotizacion.codigo }}</td>
                 <td>{{ cotizacion.cotizacion }}</td>
                 <td>{{ cotizacion.cantidad }}</td> <!-- Mostrar la cantidad -->
+                <td>{{ cotizacion.area_equipo }}</td>
                 <td>{{ cotizacion.recordatorio }}</td>
                 <td>{{ cotizacion.numero_serie }}</td>
+                <td>{{ cotizacion.solicitante }}</td> <!-- Mostrar el solicitante (nombre, número y correo) -->
                 <td>
                     <!-- Formulario para restaurar cotización -->
                     <form action="{{ url_for('restaurar_cotizacion', id=cotizacion.id) }}" method="POST">

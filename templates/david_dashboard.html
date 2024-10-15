@@ -30,8 +30,10 @@
                 <th>Código</th>
                 <th>N.º de Parte</th>
                 <th>Cantidad (piezas)</th> <!-- Añadir esta columna -->
+                <th>Área de equipo</th>
                 <th>Actualización</th>
                 <th>Nombre del Usuario</th>
+                <th>Solicitante</th> <!-- Nueva columna "Solicitante" -->
                 <th>Mensaje</th>
                 <th>Enviar Mensaje</th>
             </tr>
@@ -45,8 +47,10 @@
                 <td>{{ cotizacion.codigo }}</td>
                 <td>{{ cotizacion.cotizacion }}</td>
                 <td>{{ cotizacion.cantidad }}</td> <!-- Mostrar la cantidad -->
+                <td>{{ cotizacion.area_equipo }}</td>
                 <td>{% if cotizacion.respondido %}Cotizado{% else %}Pendiente{% endif %}</td>
                 <td>{{ cotizacion.numero_serie }}</td>
+                <td>{{ cotizacion.solicitante }}</td> <!-- Mostrar la información del Solicitante -->
                 <td>{{ cotizacion.mensaje_david or '' }}</td>
                 <td>
                     <div class="form-container">

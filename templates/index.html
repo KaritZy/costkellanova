@@ -110,13 +110,34 @@
 
                 <div class="form-group">
                     <label for="cantidad">Cantidad (piezas):</label>
-                    <input type="number" id="cantidad" name="cantidad" class="form-control" required>  
+                    <input type="text" id="cantidad" name="cantidad" class="form-control" required>  
                 </div>
+
+                <div class="form-group">
+                    <label for="area_equipo">Área de equipo:</label>
+                    <input type="text" id="area_equipo" name="area_equipo" class="form-control" required>
+                </div>                
 
                 <div class="form-group">
                     <label for="numero_serie">Nombre de Usuario:</label>
                     <input type="text" id="numero_serie" name="numero_serie" class="form-control" required>
                 </div>
+
+                 <!-- Aquí agregamos el nuevo campo para "Solicitante" con los tres subcampos -->
+        <div class="form-group">
+            <label for="solicitante_nombre">Nombre del Solicitante:</label>
+            <input type="text" id="solicitante_nombre" name="solicitante_nombre" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="solicitante_numero">Número del Solicitante:</label>
+            <input type="text" id="solicitante_numero" name="solicitante_numero" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="solicitante_correo">Correo del Solicitante:</label>
+            <input type="email" id="solicitante_correo" name="solicitante_correo" class="form-control">
+        </div>
 
                 <button type="submit" class="btn btn-success btn-block">Registrar Cotización</button>
             </form>
@@ -154,8 +175,10 @@
                             <th>Código</th>
                             <th>N.º de Parte</th>
                             <th>Cantidad (piezas)</th>
+                            <th>Área de equipo</th> <!-- Asegúrate de que este campo esté presente -->
                             <th>Actualización</th>
                             <th>Nombre del Usuario</th>
+                            <th>Solicitante</th> <!-- Mantén este campo -->
                             <th>Mensaje David</th>
                             <th style="width: 150px;">Acción</th>
                         </tr>
@@ -169,7 +192,7 @@
                             <td>{{ cotizacion.codigo }}</td> <!-- Código -->
                             <td>{{ cotizacion.cotizacion }}</td> <!-- Número de Parte -->
                             <td>{{ cotizacion.cantidad }}</td> <!-- Cantidad de piezas -->
-                            
+                            <td>{{ cotizacion.area_equipo }}</td> <!-- Aquí se muestra el área de equipo -->
                             <td class="recordatorio">
                                 {% if cotizacion.cancelado %}
                                     <span style="color: red;">Cancelado</span>
@@ -180,14 +203,20 @@
                                 {% endif %}
                             </td>
                             <td>{{ cotizacion.numero_serie }}</td>
-                            <td>{{ cotizacion.mensaje_david or 'Sin mensaje' }}</td>
+                            <td>
+                                {{ cotizacion.solicitante_nombre }}<br> <!-- Nombre del solicitante -->
+                                {{ cotizacion.solicitante_numero }}<br> <!-- Número del solicitante -->
+                                {{ cotizacion.solicitante_correo }} <!-- Correo del solicitante -->
+                            </td>
+                            <td style="color: blue;">{{ cotizacion.mensaje_david or 'Sin mensaje' }}</td>
                             <td>
                                 <!-- Botones de acción -->
                                 <div class="action-buttons">
                                     {% if not cotizacion.cancelado %}
                                         {% if not cotizacion.respondido %}
-                                            <button onclick="openModal('responder/{{ cotizacion.id }}')" class="btn btn-success">Marcar como Respondida</button>
+                                            <button onclick="openModal('responder/{{ cotizacion.id }}')" class="btn btn-success">Responder cotización</button>
                                             <button onclick="openModal('eliminar/{{ cotizacion.id }}')" class="btn btn-danger">Eliminar</button>
+                                            <a href="#" onclick="openModal('editar/{{ cotizacion.id }}')" class="btn btn-primary">Editar</a>
                                         {% elif cotizacion.respondido %}
                                             <button onclick="openModal('cancelar/{{ cotizacion.id }}')" class="btn btn-warning">Cancelar</button>
                                         {% endif %}
@@ -196,7 +225,7 @@
                             </td>
                         </tr>
                         {% endfor %}
-                    </tbody>                    
+                    </tbody>                                        
             </div>
         </section>
     </div>
@@ -225,6 +254,34 @@
             document.getElementById('adminForm').action = '/' + action;
         }
 
+        function closeModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+    </script>
+    <!-- Modal para autenticación antes de editar -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Autenticación de Administrador</h2>
+            <form id="adminForm" method="POST">
+                <input type="text" name="admin_name" placeholder="Nombre de Administrador" required>
+                <input type="password" name="admin_password" placeholder="Contraseña" required>
+                <button type="submit" class="btn btn-primary">Confirmar</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        var currentAction;
+    
+        // Esta función abre el modal y establece la acción que se quiere realizar (en este caso, editar)
+        function openModal(action) {
+            currentAction = action;
+            document.getElementById('authModal').style.display = 'block';
+            document.getElementById('adminForm').action = '/' + action;
+        }
+    
+        // Esta función cierra el modal
         function closeModal() {
             document.getElementById('authModal').style.display = 'none';
         }
